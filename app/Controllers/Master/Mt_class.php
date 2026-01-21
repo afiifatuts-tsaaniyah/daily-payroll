@@ -1,0 +1,137 @@
+<?php namespace App\Controllers\Master;
+
+use App\Controllers\BaseController;
+use App\Models\Master\M_class;
+
+$session = session();
+class Mt_class extends BaseController
+{    
+
+	public function index()
+	{	
+		// echo 'hello'; exit();
+		// $biodataModel = new BiodataModel(); 	
+		// $rs = $ebiodataodel->getAll();
+		// return json_encode($rs);
+		$data['actView'] = 'Master/class_view';
+		return view('home', $data);	
+	}
+
+     public function ins_view()
+     {
+          $data['actView'] = 'Master/class_ins';
+          return view('home', $data);     
+     }
+
+     /* START INSERT */
+     public function insData()
+     {
+     	$userId = $_SESSION['uId'];
+          $currDateTm = date("Y-m-d H:i:s");
+
+     	$mtClass = new M_class();
+          $headerId = $mtClass->generateId('class_id')['doc_id'];
+
+     	$mtClass->resetValues();
+     	$mtClass->setClassId($headerId);
+     	$mtClass->setClassCode($_POST['classCode']);
+     	$mtClass->setClassName($_POST['className']);
+     	$mtClass->setClassBase($_POST['classBase']);
+     	$mtClass->setBaseWage($_POST['baseWage']);
+     	$mtClass->setProdBonus($_POST['prodBonus']);
+     	$mtClass->setVarBonus($_POST['varBonus']);
+     	$mtClass->setPension($_POST['pension']);
+     	$mtClass->setVacationSup($_POST['vacationSup']);
+     	$mtClass->setClassCategory($_POST['classCategory']);
+     	$mtClass->setCurrency($_POST['currency']);
+          // $mtClass->setIsActive($_POST['isActive']);
+     	$mtClass->setPicInput($userId);
+     	$mtClass->setInputTime($currDateTm);
+     	// $mtClass->setPicEdit($_POST['picEdit']);
+     	// $mtClass->setEditTime($_POST['editTime']);
+
+     	$mtClass->ins();
+
+     	$data['actView'] = 'Master/class_view';
+		return view('home', $data);
+
+     }
+     /* END INSERT */
+     /* START UPDATE VIEW */
+     public function upd_view($classId)
+     {
+     	
+     	$mtClass = new M_class();
+     	$data['class01'] = $mtClass->getById($classId);
+          $data['is0']   = $mtClass->getisactived($classId);
+          // $general         = $mtClass->LoadAgreementById($doc_id);
+
+     	$data['actView'] = 'Master/class_upd';
+          return view('home', $data);
+     }
+     /* END UPDATE VIEW*/
+     /* START UPDATE */
+     public function editData()
+     {
+          // $id = $_POST['classId'];
+          $userId = $_SESSION['uId'];
+          $currDateTm = date("Y-m-d H:i:s");
+
+          $mtClass = new M_class();
+
+          $actived = 1; 
+          
+          if($_POST['isActive'] == "Y"){
+          $actived = 0; 
+          }
+
+          $id = $this->request->getPost('classId');
+          // $mtClass->setObjectById($classId);
+          $mtClass->setClassId($_POST['classId']);
+          $mtClass->setClassCode($_POST['classCode']);
+          $mtClass->setClassName($_POST['className']);
+          $mtClass->setClassBase($_POST['classBase']);
+          $mtClass->setBaseWage($_POST['baseWage']);
+          $mtClass->setProdBonus($_POST['prodBonus']);
+          $mtClass->setVarBonus($_POST['varBonus']);
+          $mtClass->setPension($_POST['pension']);
+          $mtClass->setVacationSup($_POST['vacationSup']);
+          $mtClass->setClassCategory($_POST['classCategory']);
+          $mtClass->setCurrency($_POST['currency']);
+          $mtClass->setIsActive($actived);
+          // $mtClass->setPicInput($_POST['picInput']);
+          // $mtClass->setInputTime($_POST['inputTime']);
+          $mtClass->setPicEdit($userId);
+          $mtClass->setEditTime($currDateTm);
+          $mtClass->upd($id);
+
+          // $data['actView'] = 'Master/view_class';
+          // return view('home', $data);
+     }
+     /* END UPDATE */
+     /* START GET ALL DATA*/
+     public function getAll()
+     {
+          $mtClass = new M_class();
+          $rs = $mtClass->getAll();
+          return json_encode($rs);
+     }
+     public function del()
+     {
+          $mtClass = new M_class();
+          $id = $_POST['id'];
+          $mtClass->del($id);
+     }
+     /* END GET ALL DATA */
+     public function reset()
+     {
+          /*Clear Session*/
+          if (!(isset($_SESSION['unset_userdata']))) {
+
+            return redirect()->to(base_url('master/mt_class'));
+            
+        }
+     }
+    
+
+}

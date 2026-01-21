@@ -1,0 +1,113 @@
+      <div class="app-title">
+        <div>
+          <h1>Input Master dept</h1>
+          <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><a href="<?= base_url('home') ?>"><i class="fa fa-home fa-lg"></i></a></li>
+            <li class="breadcrumb-item">Master</li>
+            <li class="breadcrumb-item">Master dept</li>
+          </ul>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+          <li class="breadcrumb-item">
+            <!-- <a href="<?= base_url('Master/Mt_dept/ins_view') ?>" class="btn btn-primary"><i class="fa fa-fw fa-lg fas fa-plus-circle "></i> New </a> -->
+          </li>
+        </ul>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="tile">
+            <div class="tile-body">
+              <!-- Check Your Valid URL -->
+              <form class="form-horizontal" method="POST" action="../insData">
+                
+                <div class="form-group row">
+                  <label class="control-label col-md-2">dept Name</label>
+                  <div class="col-md-3">
+                    <input class="form-control" name="deptName" id="deptName" type="text" placeholder="dept Name">
+                  </div>
+                </div>
+                
+              </form>
+            </div> <!-- class="tile-body" -->
+            <div class="tile-footer">
+              <button class="btn btn-primary" type="button" id="dbSave"><i class="fa fa-fw fa-lg fa-check-circle"></i>Save</button>
+              <a class="btn btn-secondary" href="<?php echo base_url(); ?>/master/mt_dept/reset"><i class="fa fa-fw fa-lg fa fa-times-circle"></i>Cancel</a>
+              <!-- &nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="#"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a> -->
+              <strong>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: red" class="errSaveMess"></span>
+              </strong>
+            </div>
+          </div> <!-- class="tile" -->
+         </div> <!-- class="col-md-12 -->
+      </div> <!-- class="row" -->
+      <!-- ***Using Valid js Path -->
+      <script src="<?php echo base_url()?>/assets/js/main.js"></script>
+      <script>
+        $(document).ready(function() {
+          var baseUrl = '<?php echo base_url()?>';
+          // $("#deptId").focus();
+          $("#dbSave").on("click", function(){
+             // let deptId = $("#deptId").val();
+             // let deptCode = $("#deptCode").val();
+             let deptName = $("#deptName").val();
+             // let isActive = $("#isActive").val();
+             let inputTime = $('#inputTime').val();
+             let picInput = $('#picInput').val();
+             $(".errSaveMess").html("");
+             // if(deptId.trim() == "")
+             // {
+             //   $("#deptId").focus();
+             //   $(".errSaveMess").html("dept Id cannot be empty");
+             // }
+             // if(deptCode.trim() == "")
+             // {
+             //   $("#deptCode").focus();
+             //   $(".errSaveMess").html("dept Code cannot be empty");
+             // }
+             if(deptName.trim() == "")
+             {
+               $("#deptName").focus();
+               $(".errSaveMess").html("dept Name cannot be empty");
+             }
+             // else if(isActive.trim() == "")
+             // {
+             //   $("#isActive").focus();
+             //   $(".errSaveMess").html("Is Active cannot be empty");
+             // }
+             /* ***Put URL your here */
+             var myUrl ='<?php echo base_url() ?>/Master/Mt_dept/insData';
+
+             // var isActive = "Y";
+              if ($('#isActive').is(":checked"))
+              { 
+                isActive = "Y";
+              }              
+              else
+              {
+                isActive = "T";
+              }
+
+             $.ajax({
+                url    : myUrl,
+                method : "POST",
+                data   : {
+                   // deptId : $("#deptId").val(),
+                   // deptCode : $("#deptCode").val(),
+                   deptName : $("#deptName").val(),
+                   // isActive,
+                   picInput : $("#picInput").val(),
+                   inputTime : $("#inputTime").val()
+                },
+                success : function(data)
+                {
+                  toastr.success("Data has been Save.", 'Alert', {"positionClass": "toast-top-center"});
+                   /* Your redirect is here */
+                  setTimeout(function () {
+                    window.location.href = baseUrl+'/Master/Mt_dept'; //will redirect to google.
+                  }, 2000);
+                }
+             })
+          });
+        });
+      </script>

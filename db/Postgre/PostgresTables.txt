@@ -1,0 +1,31 @@
+TABLES :
+-------
+
+CREATE TABLE mst_user (
+  user_id VARCHAR(15) PRIMARY KEY,
+  nip VARCHAR(15) UNIQUE NOT NULL,
+  full_name VARCHAR(50) UNIQUE NOT NULL,
+  user_name VARCHAR(30) UNIQUE NOT NULL,
+  user_password VARCHAR(30) NOT NULL,  
+  phone_imei VARCHAR(25) DEFAULT NULL, 
+  user_level integer DEFAULT NULL,
+  last_login TIMESTAMP DEFAULT NULL,
+  last_ip VARCHAR(45) DEFAULT NULL,
+  is_active integer NOT NULL,
+  pic_input VARCHAR(15) DEFAULT NULL,
+  input_time TIMESTAMP DEFAULT NULL,
+  pic_edit VARCHAR(15) DEFAULT NULL,
+  edit_time TIMESTAMP DEFAULT NULL);
+
+
+CREATE TABLE mst_menu (
+  menu_id SMALLSERIAL PRIMARY KEY,
+  app_code varchar(4) NOT NULL,
+  menu_name varchar(50) NOT NULL,
+  menu_url varchar(75) NOT NULL,
+  icon varchar(50) NOT NULL,
+  menu_group varchar(20) NOT NULL,
+  description varchar(200),
+  menu_no integer DEFAULT NULL,
+  group_no integer DEFAULT NULL,
+  is_active integer NOT NULL DEFAULT 1); 

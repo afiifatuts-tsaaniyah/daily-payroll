@@ -1,0 +1,475 @@
+<?php namespace App\Controllers\Master;
+
+use App\Controllers\BaseController;
+use App\Models\Master\M_biodata_01;
+use App\Models\Master\M_biodata_02;
+use App\Models\Master\M_biodata_03;
+use App\Models\Master\M_biodata_04;
+$session = session();
+class Biodata extends BaseController
+{
+
+	public function index()
+	{	
+		// $biodataModel = new BiodataModel(); 	
+		// $rs = $ebiodataodel->getAll();
+		// return json_encode($rs);
+		$data['actView'] = 'Master/view_biodata';
+          // $data['actView'] = 'Master/view_class';
+		return view('home', $data);	
+	}
+
+     public function ins_view()
+     {
+          $data['actView'] = 'Master/ins_biodata';
+          // $data['actView'] = 'Master/ins_class';
+          return view('home', $data);     
+     }
+
+     public function upd_view($biodataId)
+     {
+          /* Get Data Header */
+          $mBiodata01 = new M_biodata_01();
+          $mBiodata02 = new M_biodata_02();
+          $mBiodata03 = new M_biodata_03();
+          $mBiodata04 = new M_biodata_04();
+          $data['biodata01'] = $mBiodata01->getById($biodataId);
+
+          // /* Get Data Detail */
+          $data['biodata02'] = $mBiodata02->getByHeadId($biodataId);
+          $data['biodata03'] = $mBiodata03->getByHeadId($biodataId);
+          $data['biodata04'] = $mBiodata04->getByHeadId($biodataId);
+
+          $data['actView'] = 'Master/upd_biodata';
+          return view('home', $data);     
+     }
+
+	public function insData()
+	{
+          // helper('general');
+          
+          $userId = $_SESSION['uId'];
+          $currDateTm = date("Y-m-d H:i:s");
+		$db = \Config\Database::connect('hris', false);
+		$mtBiodata01 = new M_biodata_01();
+		// $db = db_connect();
+		$headerId = $mtBiodata01->generateId('biodata_id')['doc_id'];
+          // echo "Hello"; exit();
+          // $emailEncrypt = encryptionData($_POST['emailAddress']);
+          // $emailDecrypt = decryptionData($emailEncrypt);
+          // echo $emaildencrypt; exit()
+     	$mtBiodata01->resetValues();
+     	$mtBiodata01->setBiodataId($headerId);
+
+     	$mtBiodata01->setInternalId($_POST['empId']);
+     	$mtBiodata01->setFullName($_POST['empName']);
+     	$mtBiodata01->setPlaceOfBirth($_POST['birthPlace']);
+     	$mtBiodata01->setDateOfBirth($_POST['birthDate']);
+     	$mtBiodata01->setGender($_POST['gender']);
+     	$mtBiodata01->setMaritalStatus($_POST['maritalStatus']);
+     	$mtBiodata01->setNationality($_POST['nationality']);
+     	$mtBiodata01->setEthnic($_POST['ethnic']);
+     	$mtBiodata01->setIdCardNo($_POST['idNo']);
+          $mtBiodata01->setPassportNo($_POST['passportNo']);
+     	$mtBiodata01->setIdCardAddress($_POST['empAddress']);
+     	$mtBiodata01->setResidenceStatus($_POST['residenceStatus']);
+     	$mtBiodata01->setEmpWeight($_POST['weight']);
+     	$mtBiodata01->setEmpHeight($_POST['height']);
+     	$mtBiodata01->setBloodType($_POST['bloodType']);
+     	$mtBiodata01->setTelpNo($_POST['phone']);
+     	$mtBiodata01->setCellNo($_POST['cellPhone']);
+     	$mtBiodata01->setTaxNo($_POST['npwpNo']);
+     	$mtBiodata01->setBpjsNo($_POST['bpjsNo']);
+     	$mtBiodata01->setBpjsTkNo($_POST['bpjsTKNo']);
+     	$mtBiodata01->setReligion($_POST['religion']);
+     	$mtBiodata01->setDept($_POST['dept']);
+		$mtBiodata01->setEmpPosition($_POST['position']);
+     	$mtBiodata01->setEmailAddress($_POST['emailAddress']);
+          // echo $emailEncrypt, $emailDecrypt; exit();
+     	$mtBiodata01->setJoinDate($_POST['joinDate']);
+     	$mtBiodata01->setPicInput($userId);
+     	$mtBiodata01->setInputTime($currDateTm);
+     	$mtBiodata01->setEmpStatus($_POST['employeeStatus']);
+     	$mtBiodata01->setIsActive('1');
+     	// $mtBiodata01->setCompany($_POST['company']);
+     	// $mtBiodata01->setPlacement($_POST['placement']);
+     	// $mtBiodata01->setApproveLevel($_POST['approveLevel']);
+     	// $mtBiodata01->setPositionLevel($_POST['positionLevel']);
+     	// $mtBiodata01->setDrivingLicense($_POST['drivingLicense']);
+     	// $mtBiodata01->setIsGlasses($_POST['isGlasses']);
+     	// $mtBiodata01->setBankAccountNo($_POST['bankAccountNo']);
+     	// $mtBiodata01->setRegistrationNumber($_POST['registrationNumber']);
+     	// $mtBiodata01->setBankAccountName($_POST['bankAccountName']);
+     	// $mtBiodata01->setBankName($_POST['bankName']);
+     	// $mtBiodata01->setPhotoName($_POST['photoName']);
+     	$mtBiodata01->setPicInput($userId);
+     	$mtBiodata01->setInputTime($currDateTm);
+
+          $db->transBegin();
+
+     		/* Header */
+               // $mtBiodata01->ins();
+     		$strSql = $mtBiodata01->ins();
+               $db->query($strSql);
+
+               // throw new Exception("Error Processing Request", 1);
+               
+
+     		/* Education Detail */
+     		$mtBiodata02 = new M_biodata_02(); 
+		     $mtBiodata02->delByHeadId($headerId);
+               if(isset($_POST['eduList']))
+               {
+
+                    // $strQuery = "";
+                    $tEduId = $mtBiodata02->generateId('education_id')['doc_id'];
+          		$eduTableData = $_POST['eduList'];               
+     			foreach ($eduTableData as $key => $value) 
+     			{
+     				$mtBiodata02->resetValues();
+     				// $educationId = $tEduId;
+                         $educationId = $tEduId;
+     		     	$mtBiodata02->setEducationId($educationId);
+     		     	$mtBiodata02->setBiodataId($headerId);
+     		     	$mtBiodata02->setSchoolName($value['schoolName']);
+     		     	$mtBiodata02->setEducationYear($value['educationYear']);
+     		     	$mtBiodata02->setMajor($value['major']);
+     		     	$mtBiodata02->setCityName($value['cityName']);
+     		     	$mtBiodata02->setIsCertified($value['isCertified']);
+     		     	$mtBiodata02->setPicInput($userId);
+     		     	$mtBiodata02->setInputTime($currDateTm);
+     		     	// echo $mtBiodata02->ins(); exit();
+                         // $mtBiodata02->ins();
+
+                         $intEduId = intval($tEduId);
+                         $intEduId++;
+                         $tEduId = strval($intEduId);                         
+
+                         $strSql = $mtBiodata02->ins();
+                         // $strQuery .= $strSql; 
+                         $db->query($strSql);
+     			}
+                    // echo $strQuery;
+               } 
+
+               /* Experience Detail */
+               $mtBiodata03 = new M_biodata_03();
+               $mtBiodata03->delByHeadId($headerId);
+               if(isset($_POST['expList']))
+               {
+                    // $strQuery = "";
+                    $tExpId = $mtBiodata03->generateId('experience_id')['doc_id'];
+                    $expTableData = $_POST['expList'];               
+                    foreach ($expTableData as $key => $value) 
+                    {
+                         $mtBiodata03->resetValues();
+                         $experienceId = $tExpId;
+                         $mtBiodata03->setExperienceId($experienceId);
+                         $mtBiodata03->setBiodataId($headerId);
+                         $mtBiodata03->setCompanyName($value['companyName']);
+                         $mtBiodata03->setWorkYear($value['workYear']);
+
+                         $mtBiodata03->setWorkPeriod($value['workPeriod']);
+
+                         $mtBiodata03->setJobPosition($value['jobPosition']);
+                         $mtBiodata03->setJobDesc($value['jobDesc']);
+                         $mtBiodata03->setMovingReason($value['movingReason']);
+                         $mtBiodata03->setPicInput($userId);
+                         $mtBiodata03->setInputTime($currDateTm);
+                         // $mtBiodata03->ins();
+
+                         $intExpId = intval($tExpId);
+                         $intExpId++;
+                         $tExpId = strval($intExpId); 
+
+                         $strSql = $mtBiodata03->ins();
+                         // $strQuery .= $strSql; 
+                         $db->query($strSql);
+                    }    
+                    // echo $strQuery;                
+               }
+
+               /* Skill Detail */
+               $mtBiodata04 = new M_biodata_04();
+               $mtBiodata04->delByHeadId($headerId);
+               if(isset($_POST['sklList']))
+               {
+                    $tSklId = $mtBiodata04->generateId('skill_id')['doc_id'];
+                    $sklTableData = $_POST['sklList'];               
+                    foreach ($sklTableData as $key => $value)
+                    {
+                         $mtBiodata04->resetValues();
+                         $skillId = $tSklId;
+                         $mtBiodata04->setSkillId($skillId);
+                         $mtBiodata04->setBiodataId($headerId);
+                         $mtBiodata04->setSkill($value['skill']);
+                         $mtBiodata04->setRemarks($value['remarks']);
+                         $mtBiodata04->setPicInput($userId);
+                         $mtBiodata04->setInputTime($currDateTm);
+                         // $mtBiodata04->ins();    
+
+                         $intSklId = intval($tSklId);
+                         $intSklId++;
+                         $tSklId = strval($intSklId);  
+
+                         $strSql = $mtBiodata04->ins();
+                         $db->query($strSql);                       
+                    } 
+               }
+                         // echo "Hello"; exit();
+
+               // echo 'Hello'; exit();
+               // echo "<pre>";
+               // print_r($expTableData);
+               // echo "</pre>";
+               // exit();
+
+          if ($db->transStatus() === FALSE)
+		{
+               $db->transRollback();
+		}
+		else
+		{
+               $db->transCommit();
+		}
+	}
+
+     public function updData($biodataId)
+     {
+          // helper('general');
+
+          $userId = $_SESSION['uId'];
+          $currDateTm = date("Y-m-d H:i:s");
+          $db = \Config\Database::connect('hris', false);
+          $mtBiodata01 = new M_biodata_01();
+          // $db = db_connect();
+          // $headerId = $mtBiodata01->generateId('biodata_id')['doc_id'];
+          // $mtBiodata01->resetValues();
+          // $mtBiodata01->setBiodataId($headerId);
+          // $emailEncrypt = encryptionData($_POST['emailAddress']);
+          $mtBiodata01->setObjectById($biodataId);
+          $mtBiodata01->setInternalId($_POST['empId']);
+          $mtBiodata01->setFullName($_POST['empName']);
+          $mtBiodata01->setPlaceOfBirth($_POST['birthPlace']);
+          $mtBiodata01->setDateOfBirth($_POST['birthDate']);
+          $mtBiodata01->setGender($_POST['gender']);
+          $mtBiodata01->setMaritalStatus($_POST['maritalStatus']);
+          $mtBiodata01->setNationality($_POST['nationality']);
+          $mtBiodata01->setEthnic($_POST['ethnic']);
+          $mtBiodata01->setIdCardNo($_POST['idNo']);
+          $mtBiodata01->setPassportNo($_POST['passportNo']);
+          $mtBiodata01->setIdCardAddress($_POST['empAddress']);
+          $mtBiodata01->setResidenceStatus($_POST['residenceStatus']);
+          $mtBiodata01->setEmpWeight($_POST['weight']);
+          $mtBiodata01->setEmpHeight($_POST['height']);
+          $mtBiodata01->setBloodType($_POST['bloodType']);
+          $mtBiodata01->setTelpNo($_POST['phone']);
+          $mtBiodata01->setCellNo($_POST['cellPhone']);
+          $mtBiodata01->setTaxNo($_POST['npwpNo']);
+          $mtBiodata01->setBpjsNo($_POST['bpjsNo']);
+          $mtBiodata01->setBpjsTkNo($_POST['bpjsTKNo']);
+          $mtBiodata01->setReligion($_POST['religion']);
+          $mtBiodata01->setDept($_POST['dept']);
+          $mtBiodata01->setEmpPosition($_POST['position']);
+          $mtBiodata01->setEmailAddress($_POST['emailAddress']);
+          $mtBiodata01->setJoinDate($_POST['joinDate']);
+          $mtBiodata01->setPicInput($userId);
+          $mtBiodata01->setInputTime($currDateTm);
+          $mtBiodata01->setEmpStatus($_POST['employeeStatus']);
+          // $mtBiodata01->setIsActive('true');
+
+          // $mtBiodata01->setCompany($_POST['company']);
+          // $mtBiodata01->setPlacement($_POST['placement']);
+          // $mtBiodata01->setApproveLevel($_POST['approveLevel']);
+          // $mtBiodata01->setPositionLevel($_POST['positionLevel']);
+          // $mtBiodata01->setDrivingLicense($_POST['drivingLicense']);
+          // $mtBiodata01->setIsGlasses($_POST['isGlasses']);
+          // $mtBiodata01->setBankAccountNo($_POST['bankAccountNo']);
+          // $mtBiodata01->setRegistrationNumber($_POST['registrationNumber']);
+          // $mtBiodata01->setBankAccountName($_POST['bankAccountName']);
+          // $mtBiodata01->setBankName($_POST['bankName']);
+          // $mtBiodata01->setPhotoName($_POST['photoName']);
+          $mtBiodata01->setPicInput($userId);
+          $mtBiodata01->setInputTime($currDateTm);
+          $db->transBegin();
+               /* Header */
+               // $mtBiodata01->upd($biodataId); 
+               
+               $strSql = $mtBiodata01->upd($biodataId);
+               $db->query($strSql); 
+
+
+               /* Education Detail */
+               $mtBiodata02 = new M_biodata_02(); 
+               $mtBiodata02->delByHeadId($biodataId);
+               if(isset($_POST['eduList']))
+               {
+                    $tQuery = "";
+                    $tEduId = $mtBiodata02->generateId('education_id')['doc_id'];
+                    $eduTableData = $_POST['eduList'];               
+                    foreach ($eduTableData as $key => $value) 
+                    {
+                         $mtBiodata02->resetValues();
+                         $educationId = $tEduId;
+                         // return false;
+                         $mtBiodata02->setEducationId($educationId);
+                         $mtBiodata02->setBiodataId($biodataId);
+                         $mtBiodata02->setSchoolName($value['schoolName']);
+                         $mtBiodata02->setEducationYear($value['educationYear']);
+                         $mtBiodata02->setMajor($value['major']);
+                         $mtBiodata02->setCityName($value['cityName']);
+                         $mtBiodata02->setIsCertified($value['isCertified']);
+                         $mtBiodata02->setPicInput($userId);
+                         $mtBiodata02->setInputTime($currDateTm);
+                         // $mtBiodata02->ins();
+
+                         $intEduId = intval($tEduId);
+                         $intEduId++;
+                         $tEduId = strval($intEduId);     
+
+                         $strSql = $mtBiodata02->ins();
+                         $tQuery .= $strSql; 
+                         $db->query($strSql); 
+                    }
+                    // echo $tQuery;
+               } 
+
+               /* Experience Detail */
+               $mtBiodata03 = new M_biodata_03();
+               $mtBiodata03->delByHeadId($biodataId);
+               if(isset($_POST['expList']))
+               {
+                    $tExpId = $mtBiodata03->generateId('experience_id')['doc_id'];
+                    $expTableData = $_POST['expList'];               
+                    foreach ($expTableData as $key => $value) 
+                    {
+                         $mtBiodata03->resetValues();
+                         $experienceId = $tExpId;
+                         $mtBiodata03->setExperienceId($experienceId);
+                         $mtBiodata03->setBiodataId($biodataId);
+                         $mtBiodata03->setCompanyName($value['companyName']);
+                         $mtBiodata03->setWorkYear($value['workYear']);
+                         $mtBiodata03->setWorkPeriod($value['workPeriod']);
+                         $mtBiodata03->setJobPosition($value['jobPosition']);
+                         $mtBiodata03->setJobDesc($value['jobDesc']);
+                         $mtBiodata03->setMovingReason($value['movingReason']);
+                         $mtBiodata03->setPicInput($userId);
+                         $mtBiodata03->setInputTime($currDateTm);
+                         // $mtBiodata03->ins();
+
+                         $tIntExpId = intval($tExpId);
+                         $tIntExpId++;
+                         $tExpId = strval($tIntExpId);
+
+                         $strSql = $mtBiodata03->ins();
+                         $db->query($strSql);
+                    }                    
+               }
+
+               /* Skill Detail */
+               $mtBiodata04 = new M_biodata_04();
+               $mtBiodata04->delByHeadId($biodataId);
+               if(isset($_POST['sklList']))
+               {
+                    $tSklId = $mtBiodata04->generateId('skill_id')['doc_id'];
+                    $sklTableData = $_POST['sklList'];               
+                    foreach ($sklTableData as $key => $value)
+                    {
+                         $mtBiodata04->resetValues();
+                         $skillId = $tSklId;
+                         $mtBiodata04->setSkillId($skillId);
+                         $mtBiodata04->setBiodataId($biodataId);
+                         $mtBiodata04->setSkill($value['skill']);
+                         $mtBiodata04->setRemarks($value['remarks']);
+                         $mtBiodata04->setPicInput($userId);
+                         $mtBiodata04->setInputTime($currDateTm);
+                         // $mtBiodata04->ins();   
+
+                         $intSklId = intval($tSklId);
+                         $intSklId++;
+                         $tSklId = strval($intSklId);
+
+                         $strSql = $mtBiodata04->ins();
+                         $db->query($strSql);                      
+                    } 
+               }
+
+          // echo 'Hello'; exit();
+               // echo 'Hello'; exit();
+               // echo "<pre>";
+               // print_r($expTableData);
+               // echo "</pre>";
+               // exit();
+          if ($db->transStatus() === FALSE)
+          {
+                  $db->transRollback();
+          }
+          else
+          {
+                  $db->transCommit();
+          }
+     }
+
+     public function getAll()
+     {
+          $mtBiodata01 = new M_biodata_01();
+          $rs = $mtBiodata01->getAll();
+          return json_encode($rs);
+     }
+	public function test()
+	{
+		$mtBiodata01 = new M_biodata_03();
+		$rs = $mtBiodata02->generateId('experience_id')['doc_id'];
+		return json_encode($rs);
+	}	
+
+     // public function reset()
+     // {
+     //      /*Clear Session*/
+     //      $session = session();
+     //      $data['unset_userdata'] = 0;
+     //      unset(
+     //         $_SESSION['unset_userdata']
+     //      );
+     //      // $session->destroy();
+
+     //      return view('view_biodata');    
+     // }
+
+     public function reset()
+     {
+          /*Clear Session*/
+          if (!(isset($_SESSION['unset_userdata']))) {
+
+            return redirect()->to(base_url('master/Biodata'));
+            
+        }
+     }
+
+     public function myTransaction()
+     {
+          $db = \Config\Database::connect('hris', false);
+
+
+          $db->transBegin();
+
+          
+          $sql = "INSERT INTO test1 (t1, ket) VALUES ('1', 'Test')";
+          $db->query($sql);
+          // throw new Exception("Error Processing Request", 1);       
+          $sql = "INSERT INTO test2 (t2, ket) VALUES ('1', 'Test')";
+          $db->query($sql);
+
+
+          if ($db->transStatus() === FALSE)
+          {
+                  $db->transRollback();
+          }
+          else
+          {
+                  $db->transCommit();
+          }
+
+     }
+
+}

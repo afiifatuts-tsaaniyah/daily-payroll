@@ -1,0 +1,67 @@
+CREATE TABLE mst_project_team(
+	mpt_id VARCHAR PRIMARY KEY,
+	mpt_code VARCHAR (20) UNIQUE NOT NULL,
+	mpt_name VARCHAR (50) NOT NULL,
+	remarks VARCHAR (355) DEFAULT NULL,
+	input_time TIMESTAMP DEFAULT NULL,
+	pic_input VARCHAR (20) DEFAULT NULL,
+	edit_time TIMESTAMP DEFAULT NULL,
+	pic_edit VARCHAR (20) DEFAULT NULL
+);
+
+
+
+
+
+
+
+
+CREATE TABLE mst_equipment(
+	me_id VARCHAR PRIMARY KEY,
+	mpt_id VARCHAR DEFAULT NULL,
+	me_code VARCHAR (20) UNIQUE NOT NULL,
+	me_name VARCHAR (50) NOT NULL,
+	remarks VARCHAR (355) DEFAULT NULL,
+	input_time TIMESTAMP DEFAULT NULL,
+	pic_input VARCHAR (20) DEFAULT NULL,
+	edit_time TIMESTAMP DEFAULT NULL,
+	pic_edit VARCHAR (20) DEFAULT NULL
+);
+
+
+
+CREATE TABLE "con_pt_equipment" (
+	"cpe_id" INTEGER NOT NULL,
+	"mpt_id" VARCHAR NOT NULL DEFAULT '',
+	"me_id" VARCHAR NOT NULL DEFAULT '',
+	PRIMARY KEY ("cpe_id"),
+	CONSTRAINT "FK1_project_team" FOREIGN KEY ("mpt_id") REFERENCES "public"."mst_project_team" ("mpt_id") ON UPDATE CASCADE ON DELETE NO ACTION,
+	CONSTRAINT "FK2_equpment" FOREIGN KEY ("me_id") REFERENCES "public"."mst_equipment" ("me_id") ON UPDATE CASCADE ON DELETE NO ACTION
+)
+;
+
+
+CREATE TABLE trn_fuel_1(
+	fuel_id VARCHAR PRIMARY KEY,
+	fuel_no VARCHAR DEFAULT NULL,
+	fuel_date DATE DEFAULT NULL,	
+	mpt_id VARCHAR DEFAULT NULL,
+	saldo REAL DEFAULT 0,
+	remarks VARCHAR (355) DEFAULT NULL,
+	input_time TIMESTAMP DEFAULT NULL,
+	pic_input VARCHAR (20) DEFAULT NULL,
+	edit_time TIMESTAMP DEFAULT NULL,
+	pic_edit VARCHAR (20) DEFAULT NULL
+);
+
+
+CREATE TABLE trn_fuel_2(
+	fuel_2_id VARCHAR PRIMARY KEY,
+	fuel_id VARCHAR NOT NULL,	
+ 	me_id VARCHAR DEFAULT NULL,	
+ 	qty REAL DEFAULT 0,
+	remarks VARCHAR (355) DEFAULT NULL
+);
+
+
+

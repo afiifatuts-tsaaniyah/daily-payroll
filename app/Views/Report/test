@@ -1,0 +1,1 @@
+$totaltunjanganJabatan = $tunjanganJabatan + $tunjanganJabatan1 + $tunjanganJabatan2 + $tunjanganJabatan3 + $tunjanganJabatan4 + $tunjanganJabatan5 + $tunjanganJabatan6 + $tunjanganJabatan7 + $tunjanganJabatan8 + $tunjanganJabatan9 + $tunjanganJabatan10 + $tunjanganJabatan11;

@@ -1,0 +1,59 @@
+var rowIdx = null;
+		$("#usermenuTable tbody").on("click", ".btnChoose", function(){
+			var userRow = usermenuTable.row( $(this).parents("tr") );
+			var userId = $('#userId').val();
+
+
+			rowIdx = usermenuTable.row( $(this).parents("tr") ).index();
+			var menuId = userRow.data()[0];
+			var appCode = userRow.data()[1];
+			var menuCode = userRow.data()[2];
+			var menuName = userRow.data()[3];
+			var menuAccess = userRow.data()[4];
+			var tmpAcces = 'No';
+
+			var myUrl = "";
+			var myMsg = "";
+			var msgStatus = "success";
+			if(menuAccess == 'Yes'){
+			   myUrl = "<?php echo base_url()?>"+"admin/Users/userMenuDelete";
+			   tmpAcces = 'No';
+			   myMsg = "Access Revoked";
+			   msgStatus = "danger";
+			}else{
+			   myUrl = "<?php echo base_url()?>"+"admin/Users/userMenuInsert";
+			alert(myUrl);
+			   tmpAcces = 'Yes';
+			   myMsg = "Access Granted";
+			}
+
+            $.ajax({
+            	method : "POST",
+            	url : myUrl,
+            	data : {
+            		menuId : menuId,
+            		userId : userId	
+            	},
+            	success : function(data){
+					usermenuTable.row(rowIdx).data([
+		                menuId,appCode,menuCode,menuName,tmpAcces
+		            ]).draw(false);
+
+		            $.notify({
+		                title: "<h5>Information : </h5>",
+		                message: "<strong>"+myMsg+"</strong> </br></br> ",
+		                icon: '' 
+		            },
+		            {
+		                type: msgStatus,
+		                delay: 2000
+		            });
+					// alert(myMsg);
+            	},
+            	error : function(data){
+            		alert('Failed');
+            	}  
+            });
+
+			
+		});

@@ -1,0 +1,47 @@
+Connection :
+-----------
+
+PostgreSQL :
+
+1. Make sure "extension=pdo_pgsql" and "extension=pgsql" Enabled in "php.ini" file.
+2. In database.config :
+
+	/* POSTGRES */
+	public $admin = [
+		'DSN'      => '',
+		'hostname' => 'localhost',
+		'username' => 'postgres',
+		'password' => 'password',
+		'database' => 'db_template',
+		'DBDriver' => 'postgre',
+		'DBPrefix' => '',
+		'pConnect' => false,
+		'DBDebug'  => (ENVIRONMENT !== 'production'),
+		'cacheOn'  => false,
+		'cacheDir' => '',
+		'charset'  => 'utf8',
+		'DBCollat' => 'utf8_general_ci',
+		'swapPre'  => '',
+		'encrypt'  => false,
+		'compress' => false,
+		'strictOn' => false,
+		'failover' => [],
+		'port'     => 5432,
+	];
+	
+3. Sample in your Controller :
+
+		$strSql  ="SELECT DISTINCT ON (mm.group_no) * ";
+		$strSql .="FROM mst_menu mm, trn_user_menu tu, mst_user mu ";
+		$strSql .="WHERE mm.menu_id = tu.menu_id ";
+		$strSql .="AND tu.user_id = mu.user_id ";
+		$strSql .="AND mu.user_id = '".$userId."' ";
+				
+		$db = \Config\Database::connect();
+		$query = $db->query($strSql);
+		$groupMenu = $query->getResultArray();
+		return $groupMenu;
+		
+		
+		
+		

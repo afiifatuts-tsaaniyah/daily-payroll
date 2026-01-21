@@ -1,0 +1,481 @@
+<?php
+  // $_SESSION['loginStatus'] = 0;
+
+  // if( !isset($_SESSION['uLoginStatus']) || ($_SESSION['uLoginStatus']) != 1)
+  // {
+  //   return view('login');
+  //   exit(0);
+  // } 
+  // echo $_SESSION['loginStatus'] ;
+
+  $session = session();
+  /*To Maintain Collapse Menu*/
+  $uri = current_url(true);
+  $uriSegment = $uri->getSegment(2);
+  $session->set('uSegment1', $uriSegment); 
+  if (isset($_SESSION['loginStatus']) == 1) {
+	    # code...
+  
+  // echo $uriSegment; 
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
+    <!-- Twitter meta-->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:site" content="@pratikborsadiya">
+    <meta property="twitter:creator" content="@pratikborsadiya">
+    <!-- Open Graph Meta-->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Vali Admin">
+    <meta property="og:title" content="Vali - Free Bootstrap 4 admin theme">
+    <!-- <meta property="og:url" content="http://pratikborsadiya.in/blog/vali-admin"> -->
+    <!-- <meta property="og:image" content="http://pratikborsadiya.in/blog/vali-admin/hero-social.png"> -->
+    <meta property="og:description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
+    <title>Agincourt Resources HRIS</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="<?php echo base_url(); ?>/assets/images/sangatilogo.jpg">
+    <!-- Main CSS-->
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>/assets/css/main.css">
+    <!-- Font-icon css-->
+    <!-- <link rel="stylesheet" type="text/css" href="<?php #echo base_url(); ?>/fontawesome513/css/fontawesome.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>/assets/css/select2.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>/fontawesome513/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>/assets/css/toastr.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>/assets/css/my-loader.css"/>
+    <!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <!-- Essential javascripts for application to work-->
+    <script src="<?php echo base_url(); ?>/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="<?php echo base_url(); ?>/assets/js/popper.min.js"></script>
+    <script src="<?php echo base_url(); ?>/assets/js/bootstrap.min.js"></script>
+    <script src="<?php echo base_url(); ?>/assets/js/plugins/bootstrap-notify.min.js"></script>
+
+    <!-- The javascript plugin to display page loading on top-->
+    <script src="<?php echo base_url(); ?>/assets/js/plugins/pace.min.js"></script>
+    <!-- Data table plugin-->
+    <script type="text/javascript" src="<?php echo base_url(); ?>/assets/js/plugins/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>/assets/js/plugins/dataTables.bootstrap.min.js"></script>
+    <!-- Plugins -->
+    <script type="text/javascript" src="<?php echo base_url(); ?>/assets/js/plugins/select2.min.js"></script>
+    <!-- Page specific javascripts-->
+    <script type="text/javascript" src="<?php echo base_url(); ?>/assets/js/plugins/chart.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>/assets/js/plugins/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>/assets/js/toastr.min.js"></script>
+    <!-- <script type="text/javascript" src="<?php #echo base_url(); ?>/assets/js/plugins/bootstrap-datepicker.min.js"></script> -->
+  </head>
+  <body class="app sidebar-mini">
+    <!-- Navbar-->
+    <header class="app-header"><a class="app-header__logo" href="home">Agincourt Resources</a>
+      <!-- Sidebar toggle button-->
+      <!-- <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a> -->
+      <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar">
+        <!-- <i class='fas fa-list' style='font-size:21px;color:red'></i> -->
+      </a>
+      <!-- Navbar Right Menu-->
+
+      <ul class="app-nav">
+        <li class="app-search">
+          <span style="color:darkred;">Versi 1.0.2</span>
+        </li>
+
+        <!--Notification Menu-->
+        <!-- <li class="dropdown">
+          <a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Show notifications">
+            <i class="fas fa-bell fa-lg"></i>
+          </a>
+          <ul class="app-notification dropdown-menu dropdown-menu-right">
+            <li class="app-notification__title">You have 4 new notifications.</li>
+            <div class="app-notification__content">
+              <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fas fa-envelope fa-stack-1x fa-inverse"></i></span></span>
+                  <div>
+                    <p class="app-notification__message">Lisa sent you a mail</p>
+                    <p class="app-notification__meta">2 min ago</p>
+                  </div></a></li>
+              <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-danger"></i><i class="fas fa-hdd fa-stack-1x fa-inverse"></i></span></span>
+                  <div>
+                    <p class="app-notification__message">Mail server not working</p>
+                    <p class="app-notification__meta">5 min ago</p>
+                  </div></a></li>
+              <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-success"></i><i class="fas fa-handshake fa-stack-1x fa-inverse"></i></span></span>
+                  <div>
+                    <p class="app-notification__message">Transaction complete</p>
+                    <p class="app-notification__meta">2 days ago</p>
+                  </div></a></li>
+              <div class="app-notification__content">
+                <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fas fa-envelope fa-stack-1x fa-inverse"></i></span></span>
+                    <div>
+                      <p class="app-notification__message">Lisa sent you a mail</p>
+                      <p class="app-notification__meta">2 min ago</p>
+                    </div></a></li>
+                <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-danger"></i><i class="fa fa-hdd-o fa-stack-1x fa-inverse"></i></span></span>
+                    <div>
+                      <p class="app-notification__message">Mail server not working</p>
+                      <p class="app-notification__meta">5 min ago</p>
+                    </div></a></li>
+                <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-success"></i><i class="fa fa-money fa-stack-1x fa-inverse"></i></span></span>
+                    <div>
+                      <p class="app-notification__message">Transaction complete</p>
+                      <p class="app-notification__meta">2 days ago</p>
+                    </div></a></li>
+              </div>
+            </div>
+            <li class="app-notification__footer"><a href="#">See all notifications.</a></li>
+          </ul>
+        </li> -->
+        <!-- User Menu-->
+        <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Open Profile Menu"><i class="fa fa-user fa-lg"></i></a>
+          <ul class="dropdown-menu settings-menu dropdown-menu-right">
+            <li><a class="dropdown-item" href="page-user.html"><i class="fas fa-cog fa-lg"></i> Settings</a></li>
+            <li><a class="dropdown-item" href="page-user.html"><i class="fas fa-user fa-lg"></i> Profile</a></li>
+            <li><a class="dropdown-item" href="<?php echo base_url(); ?>/Home/logout"><i class="fas fa-sign-in-alt fa-lg"></i> Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </header>
+    <!-- Sidebar menu-->
+    <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+    <aside class="app-sidebar">
+      <div class="app-sidebar__user">
+        <!-- <img class="app-sidebar__user-avatar" src="<?php echo base_url(); ?>/assets/images/sangatilogo.jpg"" alt="User Image"> -->
+        <div>
+          <p class="app-sidebar__user-name"><?php echo $_SESSION['uId'] ?></p>
+          <!-- <p class="app-sidebar__user-designation"><?php echo $_SESSION['uGroup'] ?></p> -->
+        </div>
+      </div>
+      <ul class="app-menu">
+        <li>
+          <a class="app-menu__item active" href="<?php echo base_url() ?>/home">
+            <i class="app-menu__icon fas fa-th"></i>
+            <span class="app-menu__label">DASHBOARD</span>
+          </a>
+        </li>
+
+        <!-- START GENERATE GROUP -->
+        <?php       
+          $groupMenu = $_SESSION['groupMenu'];
+          $accessMenu = $_SESSION['accessMenu'];
+          foreach ($groupMenu as $row) {
+            $menuTitle = $row['menu_group'];
+            $iconTitle = $row['icon'];
+            $expand = '';
+            if($_SESSION['uSegment1'] == strtolower($menuTitle)){
+               $expand = 'is-expanded';
+            }
+        ?>
+          <li class="treeview <?php echo strtolower($menuTitle).' '.$expand ?>">
+            <a class="app-menu__item" href="#" data-toggle="treeview">
+              <!-- <i class="app-menu__icon fa fa-laptop"></i> -->
+              <i class="app-menu__icon <?php echo $iconTitle ?>"></i>
+              <span class="app-menu__label"><?php echo strtoupper($menuTitle) ?></span>
+              <i class="treeview-indicator fa fa-angle-right"></i>
+            </a>
+            <ul class="treeview-menu">
+              
+              <!-- START GENERATE MENU -->
+              <?php
+
+                // $odd = array_filter($accessMenu, function ($e) {
+                //        return $e['menu_group'] == $menuTitle;
+                // });
+
+                $filter = $menuTitle;
+                $odd = array_filter($accessMenu, function($element) use($filter){
+                    return $element['menu_group'] == $filter;
+                });
+
+                // foreach ($accessMenu as $mAcces) 
+                foreach ($odd as $mAcces) 
+                {
+                  $accessGroup = $mAcces['menu_group'];
+                  $menuName = $mAcces['menu_name'];
+                  $uri = base_url().'/'.$mAcces['menu_url'];
+                  if($accessGroup == $menuTitle)
+                  {
+              ?>
+                <li>
+                  <a class="treeview-item" href="<?php echo $uri ?>">
+                    <i class="icon fas fa-angle-right"></i> <?php echo $menuName ?>
+                  </a>
+                </li>
+
+              <?php
+                  }
+                } 
+              ?>
+              <!-- START GENERATE MENU -->
+              
+              <!-- <li>
+                <a class="treeview-item" href="https://fontawesome.com/v4.7.0/icons/" target="_blank" rel="noopener">
+                  <i class="icon fas fa-angle-right"></i> Master 2
+                </a>
+              </li>
+              <li>
+                <a class="treeview-item" href="ui-cards.html">
+                  <i class="icon fas fa-angle-right"></i> Master 3
+                </a>
+              </li>   -->
+
+            </ul>
+          </li> 
+        <?php }; ?>   
+        <!-- END GENERATE GROUP -->
+
+        <!-- <li class="treeview">
+          <a class="app-menu__item" href="#" data-toggle="treeview">
+            <i class="app-menu__icon fa fa-laptop"></i>
+            <span class="app-menu__label">UI Elements</span>
+            <i class="treeview-indicator fa fa-angle-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a class="treeview-item" href="bootstrap-components.html">
+                <i class="icon fa fa-circle-o"></i> Bootstrap Elements
+              </a>
+            </li>
+            <li>
+              <a class="treeview-item" href="https://fontawesome.com/v4.7.0/icons/" target="_blank" rel="noopener">
+                <i class="icon fa fa-circle-o"></i> Font Icons
+              </a>
+            </li>
+            <li>
+              <a class="treeview-item" href="ui-cards.html">
+                <i class="icon fa fa-circle-o"></i> Cards
+              </a>
+            </li>
+            <li>
+              <a class="treeview-item" href="widgets.html">
+                <i class="icon fa fa-circle-o"></i> Widgets
+              </a>
+            </li>
+          </ul>
+        </li> -->
+        <!-- <li>
+          <a class="app-menu__item" href="charts.html">
+            <i class="app-menu__icon fa fa-pie-chart"></i>
+            <span class="app-menu__label">Charts</span>
+          </a>
+        </li> -->
+        <!-- <li class="treeview">
+          <a class="app-menu__item" href="#" data-toggle="treeview">
+            <i class="app-menu__icon fa fa-edit"></i>
+            <span class="app-menu__label">Forms</span>
+            <i class="treeview-indicator fa fa-angle-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a class="treeview-item" href="form-components.html">
+                <i class="icon fa fa-circle-o"></i> Form Components
+              </a>
+            </li>
+            <li>
+              <a class="treeview-item" href="form-custom.html">
+                <i class="icon fa fa-circle-o"></i> Custom Components
+              </a>
+            </li>
+            <li>
+              <a class="treeview-item" href="form-samples.html">
+                <i class="icon fa fa-circle-o"></i> Form Samples
+              </a>
+            </li>
+            <li>
+              <a class="treeview-item" href="form-notifications.html">
+                <i class="icon fa fa-circle-o"></i> Form Notifications
+              </a>
+            </li>
+          </ul>
+        </li> -->
+        <!-- <li class="treeview">
+          <a class="app-menu__item" href="#" data-toggle="treeview">
+            <i class="app-menu__icon fa fa-th-list"></i>
+            <span class="app-menu__label">Tables</span>
+            <i class="treeview-indicator fa fa-angle-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a class="treeview-item" href="table-basic.html">
+                <i class="icon fa fa-circle-o"></i> Basic Tables
+              </a>
+            </li>
+            <li>
+              <a class="treeview-item" href="table-data-table.html">
+                <i class="icon fa fa-circle-o"></i> Data Tables
+              </a>
+            </li>
+          </ul>
+        </li> -->
+        <!-- <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-file-text"></i><span class="app-menu__label">Pages</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+          <ul class="treeview-menu">
+            <li><a class="treeview-item" href="blank-page.html"><i class="icon fa fa-circle-o"></i> Blank Page</a></li>
+            <li><a class="treeview-item" href="page-login.html"><i class="icon fa fa-circle-o"></i> Login Page</a></li>
+            <li><a class="treeview-item" href="page-lockscreen.html"><i class="icon fa fa-circle-o"></i> Lockscreen Page</a></li>
+            <li><a class="treeview-item" href="page-user.html"><i class="icon fa fa-circle-o"></i> User Page</a></li>
+            <li><a class="treeview-item" href="page-invoice.html"><i class="icon fa fa-circle-o"></i> Invoice Page</a></li>
+            <li><a class="treeview-item" href="page-calendar.html"><i class="icon fa fa-circle-o"></i> Calendar Page</a></li>
+            <li><a class="treeview-item" href="page-mailbox.html"><i class="icon fa fa-circle-o"></i> Mailbox</a></li>
+            <li><a class="treeview-item" href="page-error.html"><i class="icon fa fa-circle-o"></i> Error Page</a></li>
+          </ul>
+        </li> -->
+        <!-- <li><a class="app-menu__item" href="docs.html"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Docs</span></a></li> -->
+      </ul>
+    </aside>
+    <main class="app-content">
+
+    
+    <?php
+      // echo 'http://'.$_SERVER['HTTP_HOST'].'/ci4-template/';
+      echo view($actView);
+      // $uri = current_url(true);
+      // $us = $uri->getSegment(1);
+      // echo (string)$uri; 
+      // echo strtolower($_SESSION['uSegment1']); 
+      // echo $_SESSION['uLoginStatus'];
+      // print_r($groupMenu);  
+    ?>  
+       
+      <!-- <div class="app-title">
+        <div>
+          <h1><i class="fa fa-dashboard"></i> Dashboard</h1>
+          <p>A free and open source Bootstrap 4 admin template</p>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+          <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+          <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+        </ul>
+      </div> -->
+      <!-- <div class="row">
+        <div class="col-md-6 col-lg-3">
+          <div class="widget-small primary coloured-icon"><i class="icon fa fa-users fa-3x"></i>
+            <div class="info">
+              <h4>Users</h4>
+              <p><b>5</b></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="widget-small info coloured-icon"><i class="icon fa fa-thumbs-o-up fa-3x"></i>
+            <div class="info">
+              <h4>Likes</h4>
+              <p><b>25</b></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="widget-small warning coloured-icon"><i class="icon fa fa-files-o fa-3x"></i>
+            <div class="info">
+              <h4>Uploades</h4>
+              <p><b>10</b></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="widget-small danger coloured-icon"><i class="icon fa fa-star fa-3x"></i>
+            <div class="info">
+              <h4>Stars</h4>
+              <p><b>500</b></p>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <!-- <div class="row">
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">Monthly Sales</h3>
+            <div class="embed-responsive embed-responsive-16by9">
+              <canvas class="embed-responsive-item" id="lineChartDemo"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">Support Requests</h3>
+            <div class="embed-responsive embed-responsive-16by9">
+              <canvas class="embed-responsive-item" id="pieChartDemo"></canvas>
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </main>
+    
+    <!-- <script src="<?php #echo base_url(); ?>/assets/js/main.js"></script>     -->
+    <script type="text/javascript">      
+      // $(document).ready(function() {
+      //   $('#sampleTable').DataTable();
+      // } );
+    // var a = <?php #echo $us ?>; 
+    // alert('Hello');
+    // $('.treeview-menu').on('click', function(){
+    //    var currUrl = '';
+    //    window.location.href = currUrl;
+    //    var am = $(this);       
+
+    //    $.ajax({
+    //       url : currUrl,
+    //       method : 'POST',
+    //       success : function(data)
+    //       {
+    //         window.location.href = currUrl;
+    //         am.parent('.treeview').removeClass('is-expanded');
+    //         am.parent('.treeview').addClass('is-expanded');     
+    //       }
+    //    });
+
+       // alert(currUrl);
+       // am.parents()  
+       // $('.treeview-menu').parent('.treeview').removeClass('is-expanded'); 
+       // $('.treeview-menu').parent('.treeview').addClass('is-expanded'); 
+    // });
+
+     // function setMenu($menuName)
+     // {
+     //   let myUrl = "<?php #echo base_url(); ?>/User/Activity/setActiveMenu/"+$menuName;
+     //   alert(myUrl);
+     //   $.ajax({
+     //      url     : myUrl,
+     //      method  : "POST",
+     //      data    : {
+     //        activeMenu : $menuName
+     //      },
+     //      success : function(data)
+     //      {
+     //        alert($menuName)
+     //      }
+     //   })
+     // }
+    </script>
+    <!-- Google analytics script-->
+    <!-- <script type="text/javascript">
+      if(document.location.hostname == 'pratikborsadiya.in') {
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-72504830-1', 'auto');
+        ga('send', 'pageview');
+      }
+    </script> -->
+  
+    
+
+  </body>
+</html>
+<?php } else {
+  ?>
+  
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SESSION DESTROY</title>
+     <meta charset="UTF-8" />
+     <meta http-equiv="refresh" content="3; URL=<?php echo base_url() ?>/Home/checkValid" />
+   </head>
+   <body>
+     <p> Your session has expired This page has been moved. If you are not redirected within 3 seconds, click <a href="<?php echo base_url() ?>/Home/checkValid">here</a> to go to the Login Page.</p>
+   </body>
+</html>
+<?php  
+} 
+?>

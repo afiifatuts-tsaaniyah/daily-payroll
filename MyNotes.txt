@@ -1,0 +1,60 @@
+Codeigniter 4 Remove Public and Index.php From URL :
+----------------------------------------------------
+
+Step 1: 
+	Change in App.php File
+	The first step is to open the app.app file. And the changes mentioned below. You have to do this in your App.php file.
+	
+	So go to project_name/app/Config/App.php and change mention below:
+	
+	public $baseURL = 'http://localhost:8080';
+	To
+	public $baseURL = 'http://localhost/your_project_name/';
+	
+	And the second change in the app.php file:
+	
+	public $uriProtocol = 'REQUEST_URI';		
+	To
+	public $uriProtocol = 'PATH_INFO';
+
+Step 2: 
+	Copy index.php and .htaccess
+	In public/ directory, copy index.php and .htaccess to your root project directory.
+
+Step 3: 
+	Change In index.php
+	
+	$pathsPath = FCPATH . '../app/Config/Paths.php';
+	change TO
+	$pathsPath = FCPATH . 'app/Config/Paths.php';
+	
+Step 4 :
+	(In My Case)
+	Make sure your URL end without '/'
+	Ex : http://localhost/ci4-template/admin/users (Right)
+		 http://localhost/ci4-template/admin/users/ (Error)
+
+
+
+
+
+Setup Remot Access PostgreSQL :
+-------------------------------
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     peer
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            ident
+# IPv6 local connections:
+host    all             all             ::1/128                 ident
+# Allow replication connections from localhost, by a user with the
+# replication privilege.
+local   replication     all                                     peer
+host    replication     all             127.0.0.1/32            ident
+host    replication     all             ::1/128                 ident
+#Accept from anywhere
+host    all             all             0.0.0.0/0               md5
+
+
+
+ 
