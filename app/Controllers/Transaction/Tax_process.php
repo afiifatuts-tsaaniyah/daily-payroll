@@ -85,7 +85,8 @@ class Tax_process extends BaseController
             $pajak        = 0;
             $tarif        = 0;
             $dataGolongan = $mTaxGolongan->getGolonganByMarital($marital);
-            $golongan              = $dataGolongan->golongan;
+            // dd($dataGolongan);
+            $golongan              = $dataGolongan['golongan'];
         } else {
             $pajak                 = floor($brutto * ($tarif / 100));
             $golongan              = $data['golongan'];
