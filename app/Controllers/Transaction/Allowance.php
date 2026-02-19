@@ -80,9 +80,6 @@ class Allowance extends BaseController
                 $year  = substr($originalName, 13, 4);
                 $month = substr($originalName, 17, 2);
             }
-
-            // var_dump($sm, $shortName, $year, $month);
-            // exit();
         } else {
             // Extract name → client, year, month
             $shortName = substr($originalName, 0, 9);
@@ -92,6 +89,8 @@ class Allowance extends BaseController
 
 
         $clientName = ConfigurationHelper::getClientNameByAllowance($shortName);
+        // var_dump($clientName);
+        // exit();
         if (!$clientName) {
             return $this->response->setJSON([
                 'status'  => false,
@@ -132,61 +131,175 @@ class Allowance extends BaseController
 
         $dataUploaded    = $spreadsheet->getActiveSheet()->toArray();
 
+        // $db = \Config\Database::connect();
+        // $db->transBegin();
+
+        // $now = date("Y-m-d H:i:s");
+        // $userId = $_SESSION['uId'];
+
+        // $salaryModel = $this->mtSalary;
+        // $allowanceModel = new MtAllowance();
+
+        // $batchInsert = [];
+        // $salaryCache = [];
+        // $failed = [];
+
+        // // PREPARE ALLOWANCE ID
+        // $prefix = date('Ym');                // contoh 202511
+        // $counter = $allowanceModel->getLastNumber(); // ambil nomor terakhir 1x saja
+
+
+
+        // // Hapus data lama (1x saja)
+        // // $this->mAllowance->deleteByClientPeriod($clientName, $year, $month);
+
+        // for ($row = 4; $row <= $highestRow; $row++) {
+
+        //     $biodataId = trim((string)$sheet->getCell("B{$row}")->getValue());
+        //     if ($biodataId == '') continue;
+        //     $this->mAllowance->deleteByIdPeriod($biodataId, $clientName, $year, $month, $sm);
+
+        //     // Salary cache
+        //     if (!isset($salaryCache[$biodataId])) {
+        //         $salaryCache[$biodataId] = $salaryModel->getByBioId($biodataId);
+        //     }
+
+        //     if (empty($salaryCache[$biodataId])) {
+        //         $failed[] = $biodataId;
+        //         continue;
+        //     }
+
+        //     $empName = (string)$sheet->getCell("C{$row}")->getValue();
+
+        //     // Ambil config allowance
+        //     $allowances = ConfigurationHelper::getAllowanceConfigOptimized($clientName, $sheet, $row);
+
+
+        //     foreach ($allowances as $field => $value) {
+        //         $remarks = '';
+        //         if ($value == 0 || $value === null || $value === "") continue;
+
+        //         // Generate allowance ID aman
+        //         $counter++;
+        //         $allowance_id = $prefix . str_pad($counter, 4, '0', STR_PAD_LEFT);
+
+        //         if ($clientName == 'Agincourt_Martabe' && $field == 'workday_adjustment') {
+        //             $remarks = (string)$sheet->getCell("I{$row}")->getValue();
+        //         }
+
+        //         $batchInsert[] = [
+        //             'allowance_id'     => $allowance_id,
+        //             'biodata_id'       => $biodataId,
+        //             'client_name'      => $clientName,
+        //             'emp_name'         => $empName,
+        //             'year_period'      => $year,
+        //             'month_period'     => $month,
+        //             'allowance_name'   => $field,
+        //             'allowance_amount' => $value,
+        //             'remarks'          => $remarks,
+        //             'pic_process'      => $userId,
+        //             'process_time'     => $now,
+        //             'payroll_group'       => $sm,
+        //         ];
+        //         // var_dump($batchInsert);
+        //         // exit();
+
+
+        //         // Insert per 300 rows (lebih cepat)
+        //         if (count($batchInsert) >= 300) {
+        //             $allowanceModel->insertBatch($batchInsert);
+        //             $batchInsert = [];
+        //         }
+        //     }
+        // }
+
+        // if (!empty($batchInsert)) {
+        //     $allowanceModel->insertBatch($batchInsert);
+        // }
+
+        // $db->transCommit();
+
+        // return $this->response->setJSON([
+        //     'status'  => true,
+        //     'data' => $dataUploaded,
+        //     'message' => "Import Allowance Success for {$clientName}",
+        //     'failed'  => $failed,
+        // ]);
+
+        /*
+    =====================================
+    CONNECT DB (1 koneksi saja)
+    =====================================
+    */
         $db = \Config\Database::connect();
-        $db->transBegin();
+        $db->transStart(); // AUTO commit/rollback
 
-        $now = date("Y-m-d H:i:s");
-        $userId = $_SESSION['uId'];
-
-        $salaryModel = $this->mtSalary;
+        $salaryModel    = $this->mtSalary;
         $allowanceModel = new MtAllowance();
+
+        $now    = date("Y-m-d H:i:s");
+        $userId = session('uId');
 
         $batchInsert = [];
         $salaryCache = [];
-        $failed = [];
+        $failed      = [];
 
-        // PREPARE ALLOWANCE ID
-        $prefix = date('Ym');                // contoh 202511
-        $counter = $allowanceModel->getLastNumber(); // ambil nomor terakhir 1x saja
-
-
-
-        // Hapus data lama (1x saja)
-        // $this->mAllowance->deleteByClientPeriod($clientName, $year, $month);
+        $prefix  = date('Ym');
+        $counter = $allowanceModel->getLastNumber();
+        $successRows = [];
+        $no = 1;
 
         for ($row = 4; $row <= $highestRow; $row++) {
 
             $biodataId = trim((string)$sheet->getCell("B{$row}")->getValue());
-            if ($biodataId == '') continue;
-            $this->mAllowance->deleteByIdPeriod($biodataId, $clientName, $year, $month, $sm);
+            if (!$biodataId) continue;
 
-            // Salary cache
+            /*
+        ========================
+        DELETE OLD
+        ========================
+        */
+            $allowanceModel->deleteByIdPeriod(
+                $biodataId,
+                $clientName,
+                $year,
+                $month,
+                $sm
+            );
+
+            /*
+        ========================
+        SALARY CACHE
+        ========================
+        */
             if (!isset($salaryCache[$biodataId])) {
                 $salaryCache[$biodataId] = $salaryModel->getByBioId($biodataId);
             }
 
-            if (empty($salaryCache[$biodataId])) {
+            if (!$salaryCache[$biodataId]) {
                 $failed[] = $biodataId;
                 continue;
             }
 
-            $empName = (string)$sheet->getCell("C{$row}")->getValue();
+            $empName = $sheet->getCell("C{$row}")->getValue();
 
-            // Ambil config allowance
-            $allowances = ConfigurationHelper::getAllowanceConfigOptimized($clientName, $sheet, $row);
-
+            $allowances = ConfigurationHelper
+                ::getAllowanceConfigOptimized($clientName, $sheet, $row);
 
             foreach ($allowances as $field => $value) {
+
                 $remarks = '';
                 if ($value == 0 || $value === null || $value === "") continue;
 
-                // Generate allowance ID aman
-                $counter++;
-                $allowance_id = $prefix . str_pad($counter, 4, '0', STR_PAD_LEFT);
 
                 if ($clientName == 'Agincourt_Martabe' && $field == 'workday_adjustment') {
                     $remarks = (string)$sheet->getCell("I{$row}")->getValue();
                 }
+
+                // if (!$value) continue;
+
+                $counter++;
+                $allowance_id = $prefix . str_pad($counter, 4, '0', STR_PAD_LEFT);
 
                 $batchInsert[] = [
                     'allowance_id'     => $allowance_id,
@@ -200,13 +313,20 @@ class Allowance extends BaseController
                     'remarks'          => $remarks,
                     'pic_process'      => $userId,
                     'process_time'     => $now,
-                    'payroll_group'       => $sm,
+                    'payroll_group'    => $sm,
                 ];
-                // var_dump($batchInsert);
-                // exit();
 
+                $successRows[] = [
+                    $no++,                 // nomor urut
+                    $biodataId,            // biodata id
+                    $empName,              // nama
+                ];
 
-                // Insert per 300 rows (lebih cepat)
+                /*
+            ========================
+            BATCH INSERT 300
+            ========================
+            */
                 if (count($batchInsert) >= 300) {
                     $allowanceModel->insertBatch($batchInsert);
                     $batchInsert = [];
@@ -218,13 +338,26 @@ class Allowance extends BaseController
             $allowanceModel->insertBatch($batchInsert);
         }
 
-        $db->transCommit();
+        /*
+    =====================================
+    AUTO COMMIT / ROLLBACK
+    =====================================
+    */
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            return $this->response->setJSON([
+                'status'  => false,
+                'message' => 'Database error',
+                'error'   => $db->error()
+            ]);
+        }
 
         return $this->response->setJSON([
             'status'  => true,
             'data' => $dataUploaded,
-            'message' => "Import Allowance Success for {$clientName}",
-            'failed'  => $failed,
+            'message' => "Import Allowance Success",
+            'failed'  => $failed
         ]);
     }
 

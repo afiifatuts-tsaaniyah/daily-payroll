@@ -14,16 +14,18 @@
 <div class="row">
     <div class="col-md-12">
         <div class="tile">
-            <h3 class="tile-title">Timesheet Process</h3>
+            <h3 class="tile-title">Timesheet Process PMC</h3>
             <div class="tile-footer">
                 <form class="row is_header">
 
-                    <div class="form-group col-sm-12 col-md-2">
+                    <div class="form-group col-sm-12 col-md-2 d-none">
                         <label class="control-label">CLIENT NAME</label>
                         <!-- <code id="docKindErr" class="errMsg"><span> : Required</span></code> -->
                         <select class="form-control" name="clientName" id="clientName" required>
-                            <option value="" disabled selected>Pilih</option>
-                            <?php if (!empty($clients)): ?>
+                            <option value="Promincon_Indonesia" selected>Promincon Indonesia</option>
+                            <!-- <option value="" disabled selected>Pilih</option> -->
+
+                            <!-- <?php if (!empty($clients)): ?>
                                 <?php foreach ($clients as $client): ?>
                                     <option value="<?= esc($client['client_value']) ?>">
                                         <?= esc($client['client_name']) ?>
@@ -31,7 +33,7 @@
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <option value="" disabled>Tidak ada client tersedia</option>
-                            <?php endif; ?>
+                            <?php endif; ?> -->
                         </select>
                     </div>
 
@@ -108,12 +110,10 @@
                         <button class="btn btn-primary" type="button" id="btnProsesRoster"><i class="fa fa-fw fa-lg fas fa-spinner "></i>Roster Process</button>
                         <a class="btn btn-primary" type="button" id="btnDisplay"><i class="fa fa-fw fa-lg fas fa-plus-circle "></i>View</a>
                         <a class="btn btn-warning" type="button" id="btnPrintSlip"><i class='fa fa-print'></i>Print Payslip</a>
-                        <?php if (session()->get('uId') === 'venny') : ?>
-                            <button id="btnSelectPrint" class='btn btn-warning btn-xs' type="button"
-                                data-toggle='modal' data-target='#selectPrint'>
-                                <i class='fa fa-print'></i>Select Print
-                            </button>
-                        <?php endif; ?>
+                        <button id="btnSelectPrint" class='btn btn-warning btn-xs' type="button"
+                            data-toggle='modal' data-target='#selectPrint'>
+                            <i class='fa fa-print'></i>Select Print
+                        </button>
 
                         <br />
                         <div class="mt-2">

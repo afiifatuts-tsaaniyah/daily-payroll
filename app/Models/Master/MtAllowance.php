@@ -260,35 +260,71 @@ class MtAllowance extends Model
         $this->picUpdate = '';
         $this->processUpdate = "";
     }
-    public function selectAllowanceAll($bioRecId, $clientName, $year, $month, $sm)
+    // public function selectAllowanceAll($bioRecId, $clientName, $year, $month, $sm)
+    // {
+    //     return $this->db->table($this->table)
+    //         ->select('allowance_name, allowance_amount')
+    //         ->where('biodata_id', $bioRecId)
+    //         // ->where('client_name', $clientName) // aktifkan jika perlu filter client
+    //         ->where('payroll_group', $sm)
+    //         ->where('year_period', $year)
+    //         ->where('month_period', $month)
+    //         ->get()
+    //         ->getResultArray();
+    // }
+    public function selectAllowanceAll($bioRecId, $clientName, $year, $month, $sm = null)
     {
-        return $this->db->table($this->table)
+        $builder = $this->db->table($this->table)
             ->select('allowance_name, allowance_amount')
             ->where('biodata_id', $bioRecId)
-            // ->where('client_name', $clientName) // aktifkan jika perlu filter client
-            ->where('payroll_group', $sm)
             ->where('year_period', $year)
-            ->where('month_period', $month)
-            ->get()
-            ->getResultArray();
+            ->where('month_period', $month);
+
+        // ✅ hanya tambah filter kalau ada SM
+        if (!empty($sm)) {
+            $builder->where('payroll_group', $sm);
+        }
+
+        // debug SQL
+        // var_dump($builder->getCompiledSelect());
+        // die();
+
+        return $builder->get()->getResultArray();
     }
+
 
     public function selectAllowanceBySM($bioRecId, $clientName, $year, $month, $sm)
     {
-        return $this->db->table($this->table)
-            ->select([
-                'allowance_name',
-                'allowance_amount',
-                'payroll_group',
-                'remarks'
-            ])
-            ->where('biodata_id', $bioRecId)
-            // ->where('client_name', $clientName)
-            ->where('payroll_group', $sm)
-            ->where('year_period', $year)
-            ->where('month_period', $month)
-            ->get()
-            ->getResultArray();
+        // return $this->db->table($this->table)
+        //     ->select([
+        //         'allowance_name',
+        //         'allowance_amount',
+        //         'payroll_group',
+        //         'remarks'
+        //     ])
+        //     ->where('biodata_id', $bioRecId)
+        //     // ->where('client_name', $clientName)
+        //     ->where('payroll_group', $sm)
+        //     ->where('year_period', $year)
+        //     ->where('month_period', $month)
+        //     ->get()
+        //     ->getResultArray();
+         $builder = $this->db->table($this->table)
+        ->select([
+            'allowance_name',
+            'allowance_amount',
+            'payroll_group',
+            'remarks'
+        ])
+        ->where('biodata_id', $bioRecId)
+        ->where('payroll_group', $sm)
+        ->where('year_period', $year)
+        ->where('month_period', $month);
+
+    
+    // return $builder->getCompiledSelect(); // RAW SQL
+
+    return $builder->get()->getResultArray(); // normal
     }
 
 

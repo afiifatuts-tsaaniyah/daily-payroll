@@ -120,6 +120,7 @@ class SalarySlip extends Model
         $this->workTotal = 0;
         $this->stand_by_count = 0;
         $this->baseWage = 0;
+        $this->bs_prorate = 0;
         $this->dailyCount = 0;
         $this->dailyWage = 0;
         $this->normalTime = 0;
@@ -1428,6 +1429,24 @@ class SalarySlip extends Model
         // exit(); 
         $this->db->query($stQuery);
     }
+
+    public function UpdBPJS($slipId)
+    {
+        $stQuery  = "UPDATE " . $this->table . " ";
+        $stQuery .= "SET ";
+        $stQuery .=   'jkkjkm =' . $this->jkkjkm . ',';
+        $stQuery .=   'bpjs =' . $this->bpjs . ',';
+        $stQuery .=   'emp_jht =' . $this->empJht . ',';
+        $stQuery .=   'emp_jp =' . $this->empJp . ',';
+        $stQuery .=   'emp_bpjs =' . $this->empBpjs . ',';
+        $stQuery .=   'jht =' . $this->jht . ',';
+        $stQuery .=   'jhtjp =' . $this->jhtjp . '';
+        $stQuery .= " WHERE ";
+        $stQuery .=   'slip_id  = ' . $slipId . '';
+        // echo $stQuery;
+        // exit(); 
+        $this->db->query($stQuery);
+    }
     /* END QUERY INSERT */
     /* START UPDATE */
     public function upd($slipId)
@@ -1765,6 +1784,10 @@ class SalarySlip extends Model
         $this->allowance04 = $arrayRow['allowance_04'];
         $this->allowance05 = $arrayRow['allowance_05'];
         $this->adjustment = $arrayRow['adjustment'];
+        $this->ot1 = $arrayRow['ot_1'];
+        $this->ot2 = $arrayRow['ot_2'];
+        $this->ot3 = $arrayRow['ot_3'];
+        $this->ot4 = $arrayRow['ot_4'];
         $this->thr = $arrayRow['thr'];
         $this->bpjs = $arrayRow['bpjs'];
         $this->jk = $arrayRow['jk'];

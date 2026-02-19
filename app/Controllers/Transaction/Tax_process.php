@@ -100,6 +100,8 @@ class Tax_process extends BaseController
 
         /* PTKP SESUAI SLIP */
         $slipPtkp = $mSalarySlip->getPtkpByPeriod($biodataId, $clientName, $year, $month);
+        // var_dump($slipPtkp);
+        // exit();
         $ptkpTotal = $slipPtkp['ptkp_total'];
 
 

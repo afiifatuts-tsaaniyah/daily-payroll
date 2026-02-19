@@ -412,6 +412,7 @@
                               startDate: startDate
                             },
                             success: function(data) {
+                              console.log(data);
                               $("#loader").hide();
                               $('#btnProsesRoster').prop('disabled', false);
                               spinner.style.display = 'none';

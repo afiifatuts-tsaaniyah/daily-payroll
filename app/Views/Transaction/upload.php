@@ -77,6 +77,7 @@
         spinner.style.display = 'none';
 
         if (data.success) {
+          // console.log(data.rows)
           alert('Data Berhasil Di Import !!');
           updateTable(data.rows); // Update tabel dengan data baru
         } else {
@@ -228,7 +229,7 @@
         contentType: false, // WAJIB untuk FormData
         success: function(response) {
           spinner.hide();
-          console.log(response);
+          // console.log(response);
 
           Swal.fire({
             title: "Success!",

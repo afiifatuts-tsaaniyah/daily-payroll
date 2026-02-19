@@ -4,6 +4,8 @@ namespace App\Controllers\Report;
 
 use CodeIgniter\Controller;
 use App\Controllers\BaseController;
+use App\Helpers\ConfigurationHelper;
+use App\Models\Master\Client;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
@@ -13,8 +15,13 @@ use App\Models\Transaction\M_tr_slip;
 use App\Models\Transaction\M_tax;
 use App\Models\Master\M_dept;
 use App\Models\Master\M_mt_biodata;
+use App\Models\Master\MtAllowance;
 use App\Models\Report\M_tax_calculation;
-
+use App\Models\Transaction\SalarySlip;
+use App\Models\Transaction\Tax;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class Tax_calculation extends BaseController
 {

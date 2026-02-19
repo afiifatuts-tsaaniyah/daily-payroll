@@ -127,7 +127,7 @@ class Timesheet_process extends BaseController
     ) {
         // Batch info
         $batch        = $request->getPost('batch') ?? 0;
-        $limit        = 50;
+        $limit        = 30;
         $offset       = $batch * $limit;
         $currentBatch = $batch + 1;
         $isBySlipId = $biodataId;
@@ -233,15 +233,18 @@ class Timesheet_process extends BaseController
             $tmp = '';
             $otInOffCount = '';
             if (!empty($data)) {
+
                 foreach ($data as $row) {
                     $st = '';
-                    $mSalarySlip = new SalarySlip();
-                    $mOvertime = new M_tr_overtime();
 
                     $biodataId = $row->biodata_id;
                     $clientName = $row->client_name;
                     $rosterFormat = $row->roster_format;
                     $rosterBase = $row->roster_base;
+
+
+                    $mSalarySlip = new SalarySlip();
+                    $mOvertime = new M_tr_overtime();
 
 
                     $salaryRow = $this->mtSalary->loadSalaryIdByBiodataId($biodataId);

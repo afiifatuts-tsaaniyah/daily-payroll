@@ -3101,38 +3101,62 @@ class M_tr_timesheet extends Model
      /* START OF ID GENERATOR */
      public function generateId($columnId)
      {
-          $strSql = "SELECT ";
-          $strSql .= " CASE WHEN id_year = curr_ym THEN ";
-          $strSql .= "   CONCAT(id_year,LPAD(CAST( (CAST(RIGHT(fi,5) AS INTEGER)+1) AS CHAR),5,'0')) ";
-          $strSql .= " ELSE ";
-          $strSql .= "   CONCAT(curr_ym, '00001') ";
-          $strSql .= " END AS doc_id ";
-          $strSql .= "FROM ";
-          $strSql .= " (SELECT ";
-          $strSql .= "   MAX(" . $columnId . ") fi,";
-          $strSql .= "   LEFT(" . $columnId . ",4) id_year,";
-          $strSql .= "   current_date dt,";
-          $strSql .= "   RIGHT(" . $columnId . ", 5) curr_id,";
-          $strSql .= "   CONCAT(";
-          $strSql .= "   RIGHT(CAST(DATE_FORMAT(NOW(), '%y') AS CHAR),2), ";
-          $strSql .= "   LPAD(";
-          $strSql .= "      CAST(DATE_FORMAT(NOW(), '%m') AS CHAR),2,'0'";
-          $strSql .= "    )";
-          $strSql .= "   ) curr_ym,";
-          $strSql .= "   RIGHT(CAST(DATE_FORMAT(NOW(), '%y') AS CHAR),2) tYear,";
-          $strSql .= "   CAST(DATE_FORMAT(NOW(), '%m') AS CHAR) tMonth ";
-          $strSql .= " FROM ";
-          $strSql .= "   " . $this->table . " ";
-          $strSql .= " GROUP BY " . $columnId . ") a ";
-          $strSql .= " ORDER BY doc_id DESC LIMIT 1 ";
-          $query  = $this->db->query($strSql);
-          $arrayRow = $query->getRowArray();
-          if (!isset($arrayRow)) {
-               $curYM = date('ym');
-               $arrayRow['doc_id'] = $curYM . '00001';
+          $prefix = date('ym');
+
+          $query = $this->db->query("
+               SELECT MAX($columnId) as max_id
+               FROM {$this->table}
+               WHERE LEFT($columnId, 4) = '$prefix'
+          ");
+
+          $row = $query->getRowArray();
+
+          if (!$row['max_id']) {
+               return ['doc_id' => $prefix . '00001'];
           }
-          return $arrayRow;
+
+          $last = (int) substr($row['max_id'], -5);
+          $new  = $last + 1;
+
+          return [
+               'doc_id' => $prefix . str_pad($new, 5, '0', STR_PAD_LEFT)
+          ];
      }
+
+     // public function generateId($columnId)
+     // {
+     //      $strSql = "SELECT ";
+     //      $strSql .= " CASE WHEN id_year = curr_ym THEN ";
+     //      $strSql .= "   CONCAT(id_year,LPAD(CAST( (CAST(RIGHT(fi,5) AS INTEGER)+1) AS CHAR),5,'0')) ";
+     //      $strSql .= " ELSE ";
+     //      $strSql .= "   CONCAT(curr_ym, '00001') ";
+     //      $strSql .= " END AS doc_id ";
+     //      $strSql .= "FROM ";
+     //      $strSql .= " (SELECT ";
+     //      $strSql .= "   MAX(" . $columnId . ") fi,";
+     //      $strSql .= "   LEFT(" . $columnId . ",4) id_year,";
+     //      $strSql .= "   current_date dt,";
+     //      $strSql .= "   RIGHT(" . $columnId . ", 5) curr_id,";
+     //      $strSql .= "   CONCAT(";
+     //      $strSql .= "   RIGHT(CAST(DATE_FORMAT(NOW(), '%y') AS CHAR),2), ";
+     //      $strSql .= "   LPAD(";
+     //      $strSql .= "      CAST(DATE_FORMAT(NOW(), '%m') AS CHAR),2,'0'";
+     //      $strSql .= "    )";
+     //      $strSql .= "   ) curr_ym,";
+     //      $strSql .= "   RIGHT(CAST(DATE_FORMAT(NOW(), '%y') AS CHAR),2) tYear,";
+     //      $strSql .= "   CAST(DATE_FORMAT(NOW(), '%m') AS CHAR) tMonth ";
+     //      $strSql .= " FROM ";
+     //      $strSql .= "   " . $this->table . " ";
+     //      $strSql .= " GROUP BY " . $columnId . ") a ";
+     //      $strSql .= " ORDER BY doc_id DESC LIMIT 1 ";
+     //      $query  = $this->db->query($strSql);
+     //      $arrayRow = $query->getRowArray();
+     //      if (!isset($arrayRow)) {
+     //           $curYM = date('ym');
+     //           $arrayRow['doc_id'] = $curYM . '00001';
+     //      }
+     //      return $arrayRow;
+     // }
      /* END OF ID GENERATOR */
 
      public function getOtDateProcess($date, $biodataId)

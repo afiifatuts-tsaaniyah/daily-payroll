@@ -259,6 +259,7 @@
                         $('#btnSelectPrint').removeClass('d-none');
                         $('#btnProsesRoster').prop('disabled', false);
                         $('#btnPrintSlip').show();
+                        $('#btnSelectPrint').show();
                         return;
                     } else {
                         $("#loader").hide();
@@ -1055,7 +1056,37 @@
         $('#btnPrintSelectedIds').click(function(e) {
             e.preventDefault();
 
-            let myUrl = "<?= base_url('Transaction/Payroll_controller/printPayslipBySelectedId') ?>/" + selectedValues;
+            var isHealthBPJS = '0';
+            var isJHT = '0';
+            var isJP = '0';
+            var isJKKM = '0';
+            var isEnd = '0';
+            // debugger;
+            if ($("#cbHealthBPJS").is(':checked')) {
+                isHealthBPJS = '1';
+            }
+            if ($("#cbJHT").is(':checked')) {
+                isJHT = '1';
+            }
+            if ($("#cbJP").is(':checked')) {
+                isJP = '1';
+            }
+            if ($("#cbJKKM").is(':checked')) {
+                isJKKM = '1';
+            }
+            if ($("#cbEnd").is(':checked')) {
+                isEnd = '1';
+            }
+
+
+            let myUrl = "<?= base_url('Transaction/Payroll_controller/printPayslipBySelectedId') ?>/" +
+                isHealthBPJS + "/" +
+                isJHT + "/" +
+                isJP + "/" +
+                isJKKM + "/" +
+                isEnd + "/" +
+                selectedValues;
+
 
             window.open(myUrl, '_blank');
         });

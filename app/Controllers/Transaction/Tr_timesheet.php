@@ -1634,6 +1634,20 @@ class Tr_timesheet extends BaseController
 
             $allowanceModel = new MtAllowance();
             $allowanceData = $allowanceModel->selectAllowanceBySM($bioRec, 'Agincourt_Martabe', $year, $month, $sm);
+            // echo $allowanceData;
+            // return $this->response->setJSON($allowanceData);
+
+            // exit();
+            // echo json_encode([
+            //     'bioRec' => $bioRec,
+            //     'client' => 'Agincourt_Martabe',
+            //     'year' => $year,
+            //     'month' => $month,
+            //     'sm' => $sm
+            // ]);
+            // echo json_encode($allowanceData);
+            // exit();
+
 
             $amountMap  = array_column($allowanceData, 'allowance_amount', 'allowance_name');
             $remarksMap = array_column($allowanceData, 'remarks', 'allowance_name');
@@ -1642,7 +1656,10 @@ class Tr_timesheet extends BaseController
             $adjustmentInAmount  = (int) ($amountMap['adjustment_in'] ?? 0);
             $adjustmentOutAmount  = (int) ($amountMap['adjustment_out'] ?? 0);
             $thrByUserAmount  = (int) ($amountMap['thr_by_user'] ?? 0);
-            // var_dump($thrAmount);
+            // var_dump($amountMap);
+            // return $allowanceData;
+
+
             $workdayAdjustmentAmount  = (int) ($amountMap['workday_adjustment'] ?? 0);
             $lainLainAmount  = (int) ($amountMap['lain_lain'] ?? 0);
             $adjustmentRemarks = $remarksMap['workday_adjustment'] ?? '';

@@ -35,6 +35,8 @@ class Payroll_controller extends BaseController
     protected $mRosterHist;
     protected $mTax;
     protected $cTaxProcess;
+    protected $taxProcessController;
+
 
     public function __construct()
     {
@@ -51,6 +53,7 @@ class Payroll_controller extends BaseController
         $this->mTax = new Tax();
         $this->mRosterHist = new RosterHist();
         $this->cTaxProcess = new Timesheet_process();
+        $this->taxProcessController = new Tax_process();
     }
 
     public function excelDept($ptName, $group, $monthPeriod, $yearPeriod, $isEnd, $isHealthBPJS, $isJHT, $isJP, $isJKKM)
@@ -184,7 +187,7 @@ class Payroll_controller extends BaseController
             ->setFileName($fileName . '.xlsx');
     }
 
-    public function printPayslipBySelectedId($salarySlipIds)
+    public function printPayslipBySelectedId($isHealthBPJS, $isJHT, $isJP, $isJKKM, $isEnd, $salarySlipIds)
     {
         helper('filesystem'); // optional
 
@@ -226,7 +229,7 @@ class Payroll_controller extends BaseController
             } elseif ($clientName == "Mintex_Kalsel") {
                 // $this->printPayrollMintex($slipId, $clientName, $spreadsheet, $noNewSheet, 0, 1, 1, 1, 1);
             } else {
-                $this->printPayroll($slipId, $clientName, $calendarStart, $spreadsheet, $noNewSheet, 0, 1, 1, 1, 1);
+                $this->printPayroll($slipId, $clientName, $calendarStart, $spreadsheet, $noNewSheet,  $isEnd, $isHealthBPJS, $isJHT, $isJP, $isJKKM);
             }
 
             $noNewSheet++;
@@ -298,13 +301,127 @@ class Payroll_controller extends BaseController
         /* CALENDAR SETUP */
         $dateCal = $calendarStart;
         /* START VALIDATE & UPDATE GOVERNMENT REGULATION */
+
+        $salarySlip = new SalarySlip();
+
+
+        $salarySlip->setObjectById($slipId);
+
+        $basicSalary   = $salarySlip->getBaseWage();
+        $biodataId   = $salarySlip->getBiodataId();
+        $maritalStatus = $salarySlip->getMaritalStatus();
+        $year = $salarySlip->getYearPeriod();
+        $month = $salarySlip->getMonthPeriod();
+        $bsProrate = $salarySlip->getbs_prorate();
+        //Overtime
+        $otTotal1       = $salarySlip->getOt1();
+        $otTotal2       = $salarySlip->getOt2();
+        $otTotal3       = $salarySlip->getOt3();
+        $otTotal4       = $salarySlip->getOt4();
+
+        $unpaidTotal   = $salarySlip->getpotonganAbsensi();
+
+
+
+        $allowanceData = $this->getAllowanceData($biodataId, $clientName, $year, $month);
+        // var_dump($allowanceData);
+        // exit();
+                /**  START TUNJANGAN NON REGULAR  */
+        $thr                = $allowanceData['thr'];
+        $tunjangan    = $allowanceData['tunjangan'];
+        $nightShiftBonus    = $allowanceData['nightShiftBonus'];
+        $transportBonus    = $allowanceData['transportBonus'];
+        $attendanceBonus    = $allowanceData['attendanceBonus'];
+        $adjustmentIn    = $allowanceData['adjustmentIn'];
+        $adjustmentOut    = $allowanceData['adjustmentOut'];
+        $workDayAdjustment    = $allowanceData['workDayAdjustment'];
+        $thrByUser    = $allowanceData['thrByUser'];
+        $debtBurden    = $allowanceData['debtBurden'];
+        $amountAll    = $allowanceData['amountAll'];
+        /**  END TUNJANGAN NON REGULAR  */
+
+        /**  START TOTAL TUNJANGAN REGULAR + NON REG ( BONUS TOTAL )  */
+        $bonusTotal =   $thr + $attendanceBonus + $tunjangan + $nightShiftBonus + $transportBonus;
+
         $payrollConfig = $this->mPayrollConfig->loadByClient($clientName);
 
+        if ($isHealthBPJS == 1) {
+            $isHealthBPJS = 1;
+        } else if ($isHealthBPJS == 0) {
+            $isHealthBPJS = 0;
+        }
+        if ($isJHT == 1) {
+            $isJHT = 1;
+        } else if ($isJHT == 0) {
+            $isJHT = 0;
+        }
+        if ($isJP == 1) {
+            $isJP = 1;
+        } else if ($isJP == 0) {
+            $isJP = 0;
+        }
+        if ($isJKKM == 1) {
+            $isJKKM = 1;
+        } else if ($isJKKM == 0) {
+            $isJKKM = 0;
+        }
+        if ($isEnd == 1) {
+            $isEnd = 1;
+        }
 
-        $salarySlip = $this->mSalarySlip->getObjectById($slipId);
+        $govDetails =  $this->govController->calculateGovernmentRegulation(
+            $clientName,
+            $basicSalary,
+            $maritalStatus,
+            $isHealthBPJS,
+            $isJHT,
+            $isJP,
+            $isJKKM
+        );
 
 
-        $basicSalary   = $salarySlip->base_wage;
+
+        $healthBpjs = $govDetails['healthBpjs'];
+        $jkkJkm = $govDetails['jkkJkm'];
+        $jht = $govDetails['jht'];
+        $empJht = $govDetails['empJht'];
+        $jp = $govDetails['jp'];
+        $empJp = $govDetails['empJp'];
+        $empHealthBpjs = $govDetails['empHealthBpjs'];
+
+        $salarySlip->setBpjs($healthBpjs);
+        $salarySlip->setJkkJkm($jkkJkm);
+        $salarySlip->setJht($jht);
+        $salarySlip->setJp($jp);
+        $salarySlip->setEmpBpjs($empHealthBpjs);
+        $salarySlip->setEmpJht($empJht);
+        $salarySlip->setEmpJp($empJp);
+        $salarySlip->UpdBPJS($slipId);
+
+
+
+        $bonusTotal    = $thr + $tunjangan + $nightShiftBonus + $transportBonus + $attendanceBonus + $adjustmentIn + $adjustmentOut;
+        //Total Overtime
+        $allOt = $otTotal1 + $otTotal2 + $otTotal3 + $otTotal4;
+
+
+        $brutto = $bsProrate + $allOt + $bonusTotal + $jkkJkm + $healthBpjs - $unpaidTotal;
+
+        $userId = session()->get('uId');
+
+        $this->taxProcessController->taxProcess(
+            $biodataId,
+            $brutto,
+            $maritalStatus,
+            $isEnd,
+            $month,
+            $year,
+            $clientName,
+            $empJp,
+            $empJht,
+            $userId
+        );
+
         /* Closing Payroll */
         /** Row Check Bulan Dan Tahun */
         // $cekClient = $this->mSalarySlip->cekClient($slipId, $clientName);
@@ -322,9 +439,7 @@ class Payroll_controller extends BaseController
         $empJp = $rowData->emp_jp;
         $empHealthBpjs = $rowData->emp_bpjs;
 
-        $marital = $rowData->marital_status;
 
-        $marital = $rowData->marital_status;
         $ptName         = $rowData->client_name;
         $bioRecId       = $rowData->biodata_id;
 
@@ -351,44 +466,19 @@ class Payroll_controller extends BaseController
         $bsProrate = $rowData->bs_prorate;
 
 
-        //Overtime
-        $otTotal1       = $rowData->ot_1;
-        $otTotal2       = $rowData->ot_2;
-        $otTotal3       = $rowData->ot_3;
-        $otTotal4       = $rowData->ot_4;
         //Overtime Count
         $otCount1       = $rowData->ot_count1;
         $otCount2       = $rowData->ot_count2;
         $otCount3       = $rowData->ot_count3;
         $otCount4       = $rowData->ot_count4;
         $tUnpaidCount = (int) $rowData->unpaid;
-        $unpaidTotal   = $rowData->potongan_absensi;
         $tNightShiftCount = strval($rowData->night_shift_count);
         $isEnd   = $rowData->is_end;
 
         $this->updatePicPrint($slipId, $clientName, $biodataId);
         $bonusTotal = 0;
 
-        $allowanceData = $this->getAllowanceData($bioRecId, $clientName, $yearPeriod, $monthPeriod);
-        /**  START TUNJANGAN NON REGULAR  */
-        $thr                = $allowanceData['thr'];
-        $tunjangan    = $allowanceData['tunjangan'];
-        $nightShiftBonus    = $allowanceData['nightShiftBonus'];
-        $transportBonus    = $allowanceData['transportBonus'];
-        $attendanceBonus    = $allowanceData['attendanceBonus'];
-        $adjustmentIn    = $allowanceData['adjustmentIn'];
-        $adjustmentOut    = $allowanceData['adjustmentOut'];
-        $workDayAdjustment    = $allowanceData['workDayAdjustment'];
-        $thrByUser    = $allowanceData['thrByUser'];
-        $debtBurden    = $allowanceData['debtBurden'];
-        $amountAll    = $allowanceData['amountAll'];
-        /**  END TUNJANGAN NON REGULAR  */
 
-        /**  START TOTAL TUNJANGAN REGULAR + NON REG ( BONUS TOTAL )  */
-        $bonusTotal =   $thr + $attendanceBonus + $tunjangan + $nightShiftBonus + $transportBonus;
-
-        //Total Overtime
-        $allOt = $otTotal1 + $otTotal2 + $otTotal3 + $otTotal4;
         $wdAttendCount = 0;
         $wdAttendCount = $rowData->attend_total;
         $tBurden    = $allowanceData['debtBurden'];
@@ -1291,6 +1381,9 @@ class Payroll_controller extends BaseController
 
         // Ambil data allowance dari model
         $allowanceData = $mAllowance->selectAllowanceAll($bioRecId, $clientName, $year, $month, '');
+        // var_dump($allowanceData);
+        // exit();
+       
         // Inisialisasi variabel
         $thr = 0;
         $tunjangan = 0;
