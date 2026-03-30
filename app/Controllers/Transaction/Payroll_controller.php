@@ -326,7 +326,7 @@ class Payroll_controller extends BaseController
         $allowanceData = $this->getAllowanceData($biodataId, $clientName, $year, $month);
         // var_dump($allowanceData);
         // exit();
-                /**  START TUNJANGAN NON REGULAR  */
+        /**  START TUNJANGAN NON REGULAR  */
         $thr                = $allowanceData['thr'];
         $tunjangan    = $allowanceData['tunjangan'];
         $nightShiftBonus    = $allowanceData['nightShiftBonus'];
@@ -1079,6 +1079,7 @@ class Payroll_controller extends BaseController
         $spreadsheet->getActiveSheet()->getStyle('K14:O14')->applyFromArray($topBorderStyle);
         $spreadsheet->getActiveSheet()->getStyle('K14:O14')->applyFromArray($totalStyle);
 
+        $bonusTotal =   $thr + $attendanceBonus + $tunjangan + $nightShiftBonus + $transportBonus;
 
         $bonusIdx = 16;
         $spreadsheet->getActiveSheet()
@@ -1383,7 +1384,7 @@ class Payroll_controller extends BaseController
         $allowanceData = $mAllowance->selectAllowanceAll($bioRecId, $clientName, $year, $month, '');
         // var_dump($allowanceData);
         // exit();
-       
+
         // Inisialisasi variabel
         $thr = 0;
         $tunjangan = 0;

@@ -1700,6 +1700,11 @@ class Timesheet_process extends BaseController
             if ($clientName == 'Promincon_Indonesia') {
                 $bsProrate = $attendTotal * ($umk / 20);
             }
+
+            // if($attendTotal>=20){
+            //     $bsProrate = $basicSalary;
+            // }
+
             // test($tmpSalary,1);
             // echo $row['attend_total']; exit(0);
             $mSalarySlip->setbs_prorate($bsProrate);
@@ -1771,7 +1776,7 @@ class Timesheet_process extends BaseController
             // $mSalarySlip->setInPh($phAttend);
             // Perhitungan Allowance
             if ($clientName == 'Promincon_Indonesia') {
-                $tAttendT = $shiftAttend + $offAttend + $phAttend;
+                $tAttendT = $shiftAttend + $offAttend/* + $phAttend*/;   // di comment dulu 18/03/2026 
                 $attend_count        = $tAttendT;
                 $total_night_shift  = $nightShiftCount;
                 $rate_per_day  = $dailyBasic;
