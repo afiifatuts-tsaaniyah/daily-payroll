@@ -707,4 +707,40 @@ class M_mt_salary extends Model
           return $this->where('biodata_id', $biodataId)
                ->first(); // ambil satu baris pertama
      }
+
+
+     public function getEmployeeListByClient($clientName, $employeeType)
+     {
+          $builder = $this->db->table('mt_salary a')
+               ->select([
+                    'a.salary_id',
+                    'a.biodata_id',
+                    'a.id_no',
+                    'a.account_name',
+                    'a.account_no',
+                    'a.bank_id',
+                    'b.bank_name',
+                    'a.company_name',
+                    'a.monthly',
+                    'a.daily',
+                    'a.status_payroll'
+               ])
+               ->join('mt_bank b', 'b.bank_id = a.bank_id', 'left')
+               ->where('a.is_active', 1);
+
+          // 🔹 filter client
+          if ($clientName !== 'All') {
+               $builder->where('a.company_name', $clientName);
+          }
+
+          // 🔹 filter employee type
+          if ($employeeType !== 'All') {
+               $builder->where('a.status_payroll', $employeeType);
+          }
+
+          return $builder
+               ->orderBy('a.account_name', 'ASC')
+               ->get()
+               ->getResultArray();
+     }
 }
