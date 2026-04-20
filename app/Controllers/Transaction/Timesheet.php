@@ -107,6 +107,7 @@ class Timesheet extends BaseController
         ], 'File berhasil diunggah');
     }
 
+    
     public function uploadTs($inputFileName, $clientName, $year, $month, $request)
     {
         helper(['date']);
@@ -250,9 +251,16 @@ class Timesheet extends BaseController
                 continue;
             }
             $biodataIdSalary = $dataSalary['biodata_id'];
+            $clientNameSalary = $dataSalary['company_name'];
+
+            $fullName         = $dataSalary['account_name'];
 
             if (empty($biodataIdSalary)) {
-                return ResponseFormatter::error("error", "Data Salary $fullName tidak ditemukan.", 404);
+                return ResponseFormatter::error("error", "Data Salary untuk '{$fullName}' tidak ditemukan.", 404);
+            }
+
+            if (empty($clientNameSalary)) {
+                return ResponseFormatter::error("error", "Data klient di Salary untuk '{$fullName}' tidak ditemukan.", 404);
             }
 
             $days = [];

@@ -26,6 +26,7 @@
                    <th>Salary ID</th>
                    <th>Biodata ID</th>
                    <th>Full Name</th>
+                   <th>Client Name</th>
                    <th>Account Number</th>
                    <th>Bank</th>
                    <th>Monthly</th>
@@ -83,7 +84,7 @@
                         },
                         {
                           /* Column For Edit Link, (ex : 5) depend on last column no */
-                          "targets": 7,
+                          "targets": 8,
                           "data": "download_link",
                           "render": function ( data, type, row, meta ) {
                             /* Change table_id with primary key of your table  */
@@ -96,6 +97,7 @@
                   { data: "salary_id" },
                   { data: "biodata_id" },
                   { data: "full_name" },
+                  { data: "company_name" },
                   { data: "account_no" },
                   { data: "bank_name" },
                   { data: "monthly" },

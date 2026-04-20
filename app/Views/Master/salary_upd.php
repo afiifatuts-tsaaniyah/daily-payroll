@@ -124,6 +124,42 @@
             let bankId = $("#bankId").val();
             let accNo = $("#accNo").val();
             let accName = $("#accName").val();
+            let clientName = $("#clientName").val();  // tambah ini
+            let monthly = $("#monthly").val();        // tambah ini
+
+            $(".errSaveMess").html("");
+
+            // Validasi
+            if (!biodataId) {
+              $("#biodataId").focus();
+              $(".errSaveMess").html("Employee Name cannot be empty");
+              return false;
+            }
+            else if (!clientName) {                  // validasi client name
+              $("#clientName").focus();
+              $(".errSaveMess").html("Client Name cannot be empty");
+              return false;
+            }
+            else if (!bankId) {
+              $("#bankId").focus();
+              $(".errSaveMess").html("Bank Id cannot be empty");
+              return false;
+            }
+            else if (!accNo) {
+              $("#accNo").focus();
+              $(".errSaveMess").html("Account Number cannot be empty");
+              return false;
+            }
+            else if (!accName.trim()) {
+              $("#accName").focus();
+              $(".errSaveMess").html("Account Name cannot be empty");
+              return false;
+            }
+            else if (!monthly) {
+              $("#monthly").focus();
+              $(".errSaveMess").html("Monthly cannot be empty");
+              return false;
+            }
             // let isActive = $("#isActive").val();
             // let cbHealthBPJS = $("#cbHealthBPJS").val();
             // let cbJHT = $("#cbJHT").val();
