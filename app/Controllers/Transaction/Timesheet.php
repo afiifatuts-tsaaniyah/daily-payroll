@@ -260,7 +260,7 @@ class Timesheet extends BaseController
             }
 
             if (empty($clientNameSalary)) {
-                return ResponseFormatter::error("error", "Data klient di Salary untuk '{$fullName}' tidak ditemukan.", 404);
+                return ResponseFormatter::error("error", "Data klien di Salary untuk '{$fullName}' tidak ditemukan.", 404);
             }
 
             $days = [];

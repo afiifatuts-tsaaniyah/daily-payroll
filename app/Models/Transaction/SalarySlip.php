@@ -1988,6 +1988,7 @@ class SalarySlip extends Model
         tro.attend_total, tro.attend_in_off, tro.ph_total, tro.in_ph_total, tro.vacation_days,
         ms.monthly AS basic_salary,
         ms.daily AS daily_basic,
+        ms.status_payroll,
         mr.d01, mr.d02, mr.d03, mr.d04, mr.d05, mr.d06, mr.d07, mr.d08, mr.d09, mr.d10,
         mr.d11, mr.d12, mr.d13, mr.d14, mr.d15, mr.d16, mr.d17, mr.d18, mr.d19, mr.d20,
         mr.d21, mr.d22, mr.d23, mr.d24, mr.d25, mr.d26, mr.d27, mr.d28, mr.d29, mr.d30, mr.d31

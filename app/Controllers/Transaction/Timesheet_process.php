@@ -1438,6 +1438,7 @@ class Timesheet_process extends BaseController
             $shiftAttend = $row['attend_total'] - $row['attend_in_off'];
             $offAttend = $row['attend_in_off'];
             $phAttend = $row['in_ph_total'];
+            $statusPayroll = $row['status_payroll'];
 
 
             if ($isHealthBPJS == 1) {
@@ -1497,7 +1498,9 @@ class Timesheet_process extends BaseController
             $otMultiplierConfig03 = $payrollConfig['ot_03_multiplier'];
             $otMultiplierConfig04 = $payrollConfig['ot_04_multiplier'];
             $isProrateConfig = $payrollConfig['is_prorate'];
-            $umk = $payrollConfig['umk'];
+            
+            $umk = $basicSalary;
+
 
             /* START OVER TIME TOTAL */
             $otCount1 = 0;

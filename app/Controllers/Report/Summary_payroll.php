@@ -265,6 +265,8 @@ class Summary_payroll extends BaseController
             $otCount2 = $row->ot_count2;
             $otCount3 = $row->ot_count3;
             $otCount4 = $row->ot_count4;
+            // echo "OT Count 1: " . $otCount1 . "\n";
+            // exit();
             //Allowance
 
             $penalty = $row->tax_pinalty;
@@ -328,10 +330,10 @@ class Summary_payroll extends BaseController
                 ->setCellValue('L' . ($rowIdx), $idCardAddress)
                 ->setCellValue('M' . ($rowIdx), $basicSalary)
 
-                ->setCellValue('N' . ($rowIdx), $otCount1, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC)
-                ->setCellValue('O' . ($rowIdx), $otCount2, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC)
-                ->setCellValue('P' . ($rowIdx), $otCount3, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC)
-                ->setCellValue('Q' . ($rowIdx), $otCount4, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC)
+                ->setCellValueExplicit('N' . ($rowIdx), $otCount1, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC)
+                ->setCellValueExplicit('O' . ($rowIdx), $otCount2, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC)
+                ->setCellValueExplicit('P' . ($rowIdx), $otCount3, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC)
+                ->setCellValueExplicit('Q' . ($rowIdx), $otCount4, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC)
 
                 ->setCellValue('R' . ($rowIdx), $bsProrate)
                 ->setCellValue('S' . ($rowIdx), $otTotal)
